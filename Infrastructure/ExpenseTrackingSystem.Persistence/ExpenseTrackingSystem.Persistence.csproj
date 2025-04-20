@@ -16,4 +16,8 @@
 	  <ProjectReference Include="..\..\Core\ExpenseTrackingSystem.Domain\ExpenseTrackingSystem.Domain.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Repositories\" />
+	</ItemGroup>
+
 </Project>
