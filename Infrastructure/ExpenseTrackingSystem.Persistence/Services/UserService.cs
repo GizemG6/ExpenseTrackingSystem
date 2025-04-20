@@ -1,0 +1,98 @@
+﻿using AutoMapper;
+using ExpenseTrackingSystem.Application.Dtos.User;
+using ExpenseTrackingSystem.Application.Services;
+using ExpenseTrackingSystem.Domain.Entities.Identity;
+using Microsoft.AspNetCore.Identity;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ExpenseTrackingSystem.Persistence.Services
+{
+	public class UserService : IUserService
+	{
+		private readonly UserManager<AppUser> _userManager;
+		private readonly RoleManager<AppRole> _roleManager;
+		private readonly IMapper _mapper;
+
+		public UserService(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager, IMapper mapper)
+		{
+			_userManager = userManager;
+			_roleManager = roleManager;
+			_mapper = mapper;
+		}
+
+		public async Task AssignRoleToUserAsnyc(string userId, string[] roles)
+		{
+			var user = await _userManager.FindByIdAsync(userId);
+			if (user == null)
+				throw new Exception("User not found");
+			foreach (var role in roles)
+			{
+				if (!await _roleManager.RoleExistsAsync(role))
+					await _roleManager.CreateAsync(new AppRole { Name = role });
+				await _userManager.AddToRoleAsync(user, role);
+			}
+		}
+
+		public async Task<UserCreateResponseDto> CreateAsync(UserCreateDto model)
+		{
+			AppUser user = _mapper.Map<AppUser>(model);
+
+			user.Id = Guid.NewGuid().ToString();
+
+			IdentityResult result = await _userManager.CreateAsync(user, model.Password);
+
+			UserCreateResponseDto response = new()
+			{
+				Succeeded = result.Succeeded
+			};
+
+			if (result.Succeeded)
+			{
+				response.Message = "Kullanıcı başarıyla oluşturulmuştur.";
+			}
+			else
+			{
+				foreach (var error in result.Errors)
+				{
+					response.Message += $"{error.Code} - {error.Description}\n";
+				}
+			}
+
+			return response;
+		}
+
+		public Task<bool> DeleteUserAsync(string userId)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<List<AppUser>> GetAllUsersAsync()
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<string[]> GetRolesToUserAsync(string userId)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<AppUser> GetUserByIdAsync(string userId)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task UpdatePasswordAsync(string userId, string resetToken, string newPassword)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<bool> UpdateUserAsync(AppUser user)
+		{
+			throw new NotImplementedException();
+		}
+	}
+}

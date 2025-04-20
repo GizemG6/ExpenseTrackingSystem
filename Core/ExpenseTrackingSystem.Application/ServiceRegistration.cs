@@ -26,6 +26,8 @@ namespace ExpenseTrackingSystem.Application
 			});
 
 			services.AddSingleton(new MapperConfiguration(x => x.AddProfile(new MapperConfig())).CreateMapper());
+
+			services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ServiceRegistration).Assembly));
 		}
 	}
 }

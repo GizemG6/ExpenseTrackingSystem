@@ -8,10 +8,18 @@ namespace ExpenseTrackingSystem.Application.Dtos.User
 {
     public class UserDto
     {
-        public long Id { get; set; }
-        public string FullName { get; set; }
-        public string Email { get; set; }
-        public string Role { get; set; }
-        public string IBAN { get; set; }
-    }
+		public string FullName { get; set; }
+
+		public string UserName { get; set; }
+
+		public string Email { get; set; }
+
+		public string IBAN { get; set; }
+
+		public bool IsActive { get; set; }
+
+		public DateTime CreatedDate { get; set; }
+
+		public DateTime? UpdatedDate { get; set; }
+	}
 }

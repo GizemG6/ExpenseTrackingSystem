@@ -10,7 +10,7 @@ namespace ExpenseTrackingSystem.Application.Services
 {
 	public interface IUserService
 	{
-		Task<UserDto> CreateAsync(UserCreateDto model);
+		Task<UserCreateResponseDto> CreateAsync(UserCreateDto model);
 		Task<AppUser> GetUserByIdAsync(string userId);
 		Task<List<AppUser>> GetAllUsersAsync();
 		Task<bool> UpdateUserAsync(AppUser user);

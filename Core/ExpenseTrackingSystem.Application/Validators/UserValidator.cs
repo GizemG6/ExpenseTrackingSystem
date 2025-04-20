@@ -24,10 +24,6 @@ namespace ExpenseTrackingSystem.Application.Validators
 				.NotEmpty()
 				.MinimumLength(6);
 
-			RuleFor(x => x.Role)
-				.NotEmpty()
-				.Must(role => role == "Admin" || role == "Employee");
-
 			RuleFor(x => x.IBAN)
 				.NotEmpty()
 				.Matches(@"^TR\d{2}\d{5}\d{16}$");

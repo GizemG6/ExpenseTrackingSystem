@@ -19,7 +19,12 @@ namespace ExpenseTrackingSystem.Application.Mapper
 		public MapperConfig()
 		{
 			CreateMap<AppUser, UserDto>().ReverseMap();
-			CreateMap<UserCreateDto, AppUser>();
+			CreateMap<UserCreateDto, AppUser>()
+				.ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserName))
+				.ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
+				.ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.FullName))
+				.ForMember(dest => dest.IBAN, opt => opt.MapFrom(src => src.IBAN))
+				.ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => src.CreatedDate));
 
 			CreateMap<Expense, ExpenseDto>()
 			.ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name))
