@@ -17,10 +17,4 @@
 	  <ProjectReference Include="..\..\Core\ExpenseTrackingSystem.Domain\ExpenseTrackingSystem.Domain.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Repositories\ExpenseCategory\" />
-	  <Folder Include="Repositories\Expense\" />
-	  <Folder Include="Repositories\Payment\" />
-	</ItemGroup>
-
 </Project>
