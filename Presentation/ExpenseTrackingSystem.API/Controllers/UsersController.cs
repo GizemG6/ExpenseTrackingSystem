@@ -16,7 +16,7 @@ namespace ExpenseTrackingSystem.API.Controllers
 			_mediator = mediator;
 		}
 
-		[HttpPost("[action]")]
+		[HttpPost]
 		public async Task<IActionResult> CreateUser(CreateUserCommandRequest createUserCommandRequest)
 		{
 			CreateUserCommandResponse response = await _mediator.Send(createUserCommandRequest);

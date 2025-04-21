@@ -42,6 +42,7 @@ namespace ExpenseTrackingSystem.Persistence.Services
 			AppUser user = _mapper.Map<AppUser>(model);
 
 			user.Id = Guid.NewGuid().ToString();
+			user.UserName = GenerateValidUsername(model.FullName);
 
 			IdentityResult result = await _userManager.CreateAsync(user, model.Password);
 
@@ -93,6 +94,19 @@ namespace ExpenseTrackingSystem.Persistence.Services
 		public Task<bool> UpdateUserAsync(AppUser user)
 		{
 			throw new NotImplementedException();
+		}
+
+		private string GenerateValidUsername(string fullName)
+		{
+			var normalized = fullName
+				.ToLower()
+				.Replace("ç", "c").Replace("ğ", "g")
+				.Replace("ı", "i").Replace("ö", "o")
+				.Replace("ş", "s").Replace("ü", "u");
+
+			var username = new string(normalized.Where(char.IsLetterOrDigit).ToArray());
+
+			return string.IsNullOrWhiteSpace(username) ? "user" + Guid.NewGuid().ToString("N").Substring(0, 6) : username;
 		}
 	}
 }

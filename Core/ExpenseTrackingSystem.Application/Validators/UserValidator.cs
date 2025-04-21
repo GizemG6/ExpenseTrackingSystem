@@ -1,4 +1,5 @@
 ﻿using ExpenseTrackingSystem.Application.Dtos.User;
+using ExpenseTrackingSystem.Application.Features.Commands.User.CreateUser;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ExpenseTrackingSystem.Application.Validators
 {
-	public class UserValidator : AbstractValidator<UserCreateDto>
+	public class UserValidator : AbstractValidator<CreateUserCommandRequest>
 	{
 		public UserValidator()
 		{
@@ -22,11 +23,16 @@ namespace ExpenseTrackingSystem.Application.Validators
 
 			RuleFor(x => x.Password)
 				.NotEmpty()
-				.MinimumLength(6);
+				.MinimumLength(6)
+				.Matches(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$");
 
 			RuleFor(x => x.IBAN)
 				.NotEmpty()
 				.Matches(@"^TR\d{2}\d{5}\d{16}$");
+
+			RuleFor(x => x.PhoneNumber)
+			.NotEmpty()
+			.Matches(@"^(?:\+90|0)?5\d{9}$");
 		}
 	}
 }
