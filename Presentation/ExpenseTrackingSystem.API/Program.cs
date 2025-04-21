@@ -1,4 +1,5 @@
 
+using ExpenseTrackingSystem.API.Middlewares;
 using ExpenseTrackingSystem.Application;
 using ExpenseTrackingSystem.Persistence;
 
@@ -24,6 +25,8 @@ namespace ExpenseTrackingSystem.API
 				app.UseSwagger();
 				app.UseSwaggerUI();
 			}
+
+			app.ConfigureExceptionHandler(app.Services.GetRequiredService<ILogger<Program>>());
 
 			app.UseHttpsRedirection();
 

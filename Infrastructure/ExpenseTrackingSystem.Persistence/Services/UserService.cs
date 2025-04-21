@@ -70,8 +70,6 @@ namespace ExpenseTrackingSystem.Persistence.Services
 		public async Task<bool> DeleteUserAsync(string userId)
 		{
 			var user = await _userManager.FindByIdAsync(userId);
-			if (user == null)
-				throw new Exception("Kullanıcı bulunamadı.");
 			user.IsActive = false;
 			var result = await _userManager.UpdateAsync(user);
 			return result.Succeeded;

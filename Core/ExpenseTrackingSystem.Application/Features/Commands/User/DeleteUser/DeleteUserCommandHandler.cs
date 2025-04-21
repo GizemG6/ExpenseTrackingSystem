@@ -20,25 +20,18 @@ namespace ExpenseTrackingSystem.Application.Features.Commands.User.DeleteUser
 		public async Task<DeleteUserCommandResponse> Handle(DeleteUserCommandRequest request, CancellationToken cancellationToken)
 		{
 			var user = await _userService.GetUserByIdAsync(request.Id);
-			if (user == null)
-			{
-				throw new Exception("User not found");
-			}
+
 			var result = await _userService.DeleteUserAsync(request.Id);
+
 			if (result)
 			{
-				return new DeleteUserCommandResponse
+				return new()
 				{
-					Message = "User deleted successfully"
+					Message = "User deleted successfully."
 				};
 			}
 			else
-			{
-				return new DeleteUserCommandResponse
-				{
-					Message = "Failed to delete user"
-				};
-			}
+				return new();
 		}
 	}
 }
