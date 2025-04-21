@@ -1,5 +1,6 @@
 ﻿using ExpenseTrackingSystem.Application.Features.Commands.User.CreateUser;
 using ExpenseTrackingSystem.Application.Features.Queries.User.GetAllUsers;
+using ExpenseTrackingSystem.Application.Features.Queries.User.GetUserById;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +22,13 @@ namespace ExpenseTrackingSystem.API.Controllers
 		public async Task<IActionResult> GetAllUsers()
 		{
 			var response = await _mediator.Send(new GetAllUsersQueryRequest());
+			return Ok(response);
+		}
+
+		[HttpGet("{Id}")]
+		public async Task<IActionResult> GetUserById([FromRoute]GetUserByIdQueryRequest getUserByIdQueryRequest)
+		{
+			GetUserByIdQueryResponse response = await _mediator.Send(getUserByIdQueryRequest);
 			return Ok(response);
 		}
 

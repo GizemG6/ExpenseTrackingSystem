@@ -82,9 +82,14 @@ namespace ExpenseTrackingSystem.Persistence.Services
 			throw new NotImplementedException();
 		}
 
-		public Task<AppUser> GetUserByIdAsync(string userId)
+		public async Task<AppUser> GetUserByIdAsync(string userId)
 		{
-			throw new NotImplementedException();
+			var user = await _userManager.FindByIdAsync(userId);
+
+			if (user == null)
+				throw new Exception("Kullanıcı bulunamadı.");
+
+			return user;
 		}
 
 		public Task UpdatePasswordAsync(string userId, string resetToken, string newPassword)
