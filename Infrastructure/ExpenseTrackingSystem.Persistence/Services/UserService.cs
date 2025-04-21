@@ -3,6 +3,7 @@ using ExpenseTrackingSystem.Application.Dtos.User;
 using ExpenseTrackingSystem.Application.Services;
 using ExpenseTrackingSystem.Domain.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -71,9 +72,9 @@ namespace ExpenseTrackingSystem.Persistence.Services
 			throw new NotImplementedException();
 		}
 
-		public Task<List<AppUser>> GetAllUsersAsync()
+		public async Task<List<AppUser>> GetAllUsersAsync()
 		{
-			throw new NotImplementedException();
+			return await _userManager.Users.ToListAsync();
 		}
 
 		public Task<string[]> GetRolesToUserAsync(string userId)
