@@ -25,16 +25,30 @@ namespace ExpenseTrackingSystem.Persistence.Services
 			_mapper = mapper;
 		}
 
-		public async Task AssignRoleToUserAsnyc(string userId, string[] roles)
+		public async Task AssignRoleToUserAsnyc(string userId, string role)
 		{
-			var user = await _userManager.FindByIdAsync(userId);
+			AppUser user = await _userManager.FindByIdAsync(userId);
 			if (user == null)
 				throw new Exception("User not found");
-			foreach (var role in roles)
+
+			if (!RoleConstants.AllRoles.Contains(role))
 			{
-				if (!await _roleManager.RoleExistsAsync(role))
-					await _roleManager.CreateAsync(new AppRole { Name = role });
-				await _userManager.AddToRoleAsync(user, role);
+				throw new Exception($"Invalid role: {role}");
+			}
+
+			if (!await _roleManager.RoleExistsAsync(role))
+			{
+				var createRoleResult = await _roleManager.CreateAsync(new AppRole { Name = role });
+				if (!createRoleResult.Succeeded)
+				{
+					throw new Exception($"Could not create role: {role}");
+				}
+			}
+
+			var addResult = await _userManager.AddToRoleAsync(user, role);
+			if (!addResult.Succeeded)
+			{
+				throw new Exception($"Role could not be assigned: {role}");
 			}
 		}
 
@@ -47,21 +61,14 @@ namespace ExpenseTrackingSystem.Persistence.Services
 
 			IdentityResult result = await _userManager.CreateAsync(user, model.Password);
 
-			UserCreateResponseDto response = new()
-			{
-				Succeeded = result.Succeeded
-			};
+			UserCreateResponseDto response = new() { Succeeded = result.Succeeded };
 
 			if (result.Succeeded)
-			{
-				response.Message = "Kullanıcı başarıyla oluşturulmuştur.";
-			}
+				response.Message = "User created successfully.";
 			else
 			{
-				foreach (var error in result.Errors)
-				{
-					response.Message += $"{error.Code} - {error.Description}\n";
-				}
+				var message = string.Join("\n", result.Errors.Select(e => $"{e.Code} - {e.Description}"));
+				throw new Exception(message);
 			}
 
 			return response;
@@ -90,7 +97,7 @@ namespace ExpenseTrackingSystem.Persistence.Services
 			var user = await _userManager.FindByIdAsync(userId);
 
 			if (user == null)
-				throw new Exception("Kullanıcı bulunamadı.");
+				throw new Exception("User not found.");
 
 			return user;
 		}
@@ -116,6 +123,14 @@ namespace ExpenseTrackingSystem.Persistence.Services
 			var username = new string(normalized.Where(char.IsLetterOrDigit).ToArray());
 
 			return string.IsNullOrWhiteSpace(username) ? "user" + Guid.NewGuid().ToString("N").Substring(0, 6) : username;
+		}
+
+		private static class RoleConstants
+		{
+			public const string Admin = "Admin";
+			public const string Employee = "Employee";
+
+			public static readonly string[] AllRoles = { Admin, Employee };
 		}
 	}
 }

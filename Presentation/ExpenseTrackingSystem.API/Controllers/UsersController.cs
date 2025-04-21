@@ -1,5 +1,7 @@
-﻿using ExpenseTrackingSystem.Application.Features.Commands.User.CreateUser;
+﻿using ExpenseTrackingSystem.Application.Features.Commands.User.AssignRoleToUser;
+using ExpenseTrackingSystem.Application.Features.Commands.User.CreateUser;
 using ExpenseTrackingSystem.Application.Features.Commands.User.DeleteUser;
+using ExpenseTrackingSystem.Application.Features.Commands.User.RoleAssign;
 using ExpenseTrackingSystem.Application.Features.Queries.User.GetAllUsers;
 using ExpenseTrackingSystem.Application.Features.Queries.User.GetUserById;
 using MediatR;
@@ -37,6 +39,13 @@ namespace ExpenseTrackingSystem.API.Controllers
 		public async Task<IActionResult> CreateUser(CreateUserCommandRequest createUserCommandRequest)
 		{
 			CreateUserCommandResponse response = await _mediator.Send(createUserCommandRequest);
+			return Ok(response);
+		}
+
+		[HttpPost("assign-role")]
+		public async Task<IActionResult> AssignRole([FromBody] AssignRoleToUserCommandRequest request)
+		{
+			AssignRoleToUserCommandResponse response = await _mediator.Send(request);
 			return Ok(response);
 		}
 
