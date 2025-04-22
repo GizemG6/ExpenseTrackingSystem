@@ -111,6 +111,18 @@ namespace ExpenseTrackingSystem.Persistence.Services
 			throw new NotImplementedException();
 		}
 
+		public async Task UpdateRefreshTokenAsync(string refreshToken, AppUser user, DateTime accessTokenDate, int addOnAccessTokenDate)
+		{
+			if (user != null)
+			{
+				user.RefreshToken = refreshToken;
+				user.RefreshTokenEndDate = accessTokenDate.AddSeconds(addOnAccessTokenDate);
+				await _userManager.UpdateAsync(user);
+			}
+			else
+				throw new Exception("User not found");
+		}
+
 		public Task<bool> UpdateUserAsync(AppUser user)
 		{
 			throw new NotImplementedException();

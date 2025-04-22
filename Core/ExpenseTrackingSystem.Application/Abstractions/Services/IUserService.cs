@@ -18,5 +18,6 @@ namespace ExpenseTrackingSystem.Application.Abstractions.Services
         Task<bool> DeleteUserAsync(string userId);
         Task AssignRoleToUserAsnyc(string userId, string role);
         Task<List<UserDto>> GetUsersByRoleAsync(string roleName);
-    }
+		Task UpdateRefreshTokenAsync(string refreshToken, AppUser user, DateTime accessTokenDate, int addOnAccessTokenDate);
+	}
 }

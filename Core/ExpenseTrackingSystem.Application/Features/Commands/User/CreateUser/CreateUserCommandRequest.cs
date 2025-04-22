@@ -10,6 +10,7 @@ namespace ExpenseTrackingSystem.Application.Features.Commands.User.CreateUser
 	public class CreateUserCommandRequest : IRequest<CreateUserCommandResponse>
 	{
 		public string FullName { get; set; }
+		public string Title { get; set; }
 		public string Email { get; set; }
 		public string Password { get; set; }
 		public string IBAN { get; set; }

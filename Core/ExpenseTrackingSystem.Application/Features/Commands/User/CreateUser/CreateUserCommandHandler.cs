@@ -27,7 +27,8 @@ namespace ExpenseTrackingSystem.Application.Features.Commands.User.CreateUser
 				IBAN = request.IBAN,
 				Password = request.Password,
 				CreatedDate = request.CreatedDate,
-				PhoneNumber = request.PhoneNumber
+				PhoneNumber = request.PhoneNumber,
+				Title = request.Title
 			});
 
 			return new()

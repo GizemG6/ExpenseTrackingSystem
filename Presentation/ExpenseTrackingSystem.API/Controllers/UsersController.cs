@@ -13,7 +13,7 @@ namespace ExpenseTrackingSystem.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	[Authorize(Roles = "Admin")]
+	//[Authorize(Roles = "Admin")]
 	public class UsersController : ControllerBase
 	{
 		private readonly IMediator _mediator;

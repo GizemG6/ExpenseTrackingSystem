@@ -17,6 +17,10 @@ namespace ExpenseTrackingSystem.Application.Validators
 			.NotEmpty()
 			.MaximumLength(100);
 
+			RuleFor(x => x.Title)
+			.NotEmpty()
+			.MaximumLength(100);
+
 			RuleFor(x => x.Email)
 				.NotEmpty()
 				.EmailAddress();

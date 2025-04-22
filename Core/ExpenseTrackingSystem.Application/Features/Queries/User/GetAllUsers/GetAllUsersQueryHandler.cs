@@ -28,7 +28,8 @@ namespace ExpenseTrackingSystem.Application.Features.Queries.User.GetAllUsers
 				PhoneNumber = users.PhoneNumber,
 				IBAN = users.IBAN,
 				IsActive = users.IsActive,
-				CreatedDate = users.CreatedDate
+				CreatedDate = users.CreatedDate,
+				Title = users.Title
 			}).ToList();
 		}
 	}
