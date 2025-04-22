@@ -35,6 +35,7 @@ namespace ExpenseTrackingSystem.Persistence
 			}).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
 
 			services.AddScoped<IUserService, UserService>();
+			services.AddScoped<IAuthService, AuthService>();
 			services.AddScoped<ITokenService, TokenService>();
 			services.AddScoped<IExpenseReadRepository, ExpenseReadRepository>();
 			services.AddScoped<IExpenseWriteRepository, ExpenseWriteRepository>();

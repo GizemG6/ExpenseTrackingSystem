@@ -16,17 +16,15 @@ namespace ExpenseTrackingSystem.Persistence.Services
 {
 	public class AuthService : IAuthService
 	{
-		private readonly HttpClient _httpClient;
 		private readonly IConfiguration _configuration;
 		private readonly UserManager<AppUser> _userManager;
 		private readonly ITokenService _tokenService;
 		private readonly SignInManager<AppUser> _signInManager;
 		private readonly IUserService _userService;
 
-		public AuthService(HttpClient httpClient, IConfiguration configuration, UserManager<AppUser> userManager,
+		public AuthService(IConfiguration configuration, UserManager<AppUser> userManager,
 			ITokenService tokenService, SignInManager<AppUser> signInManager, IUserService userService)
 		{
-			_httpClient = httpClient;
 			_configuration = configuration;
 			_userManager = userManager;
 			_tokenService = tokenService;
