@@ -1,5 +1,6 @@
 ﻿using ExpenseTrackingSystem.Application.Features.Commands.User.LoginUser;
 using ExpenseTrackingSystem.Application.Features.Commands.User.RefreshTokenLogin;
+using ExpenseTrackingSystem.Application.Features.Commands.User.VerifyResetToken;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -28,6 +29,13 @@ namespace ExpenseTrackingSystem.API.Controllers
 		public async Task<IActionResult> RefreshTokenLogin(RefreshTokenLoginCommandRequest refreshTokenLoginCommandRequest)
 		{
 			RefreshTokenLoginCommandResponse response = await _mediator.Send(refreshTokenLoginCommandRequest);
+			return Ok(response);
+		}
+
+		[HttpPost("verify-reset-token")]
+		public async Task<IActionResult> VerifyResetToken([FromBody] VerifyResetTokenCommandRequest verifyResetTokenCommandRequest)
+		{
+			VerifyResetTokenCommandResponse response = await _mediator.Send(verifyResetTokenCommandRequest);
 			return Ok(response);
 		}
 	}
