@@ -1,5 +1,5 @@
-﻿using ExpenseTrackingSystem.Application.Dtos.User;
-using ExpenseTrackingSystem.Application.Services;
+﻿using ExpenseTrackingSystem.Application.Abstractions.Services;
+using ExpenseTrackingSystem.Application.Dtos.User;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ExpenseTrackingSystem.Application.Features.Commands.User.CreateUser
 {
-	public class CreateUserCommandHandler : IRequestHandler<CreateUserCommandRequest, CreateUserCommandResponse>
+    public class CreateUserCommandHandler : IRequestHandler<CreateUserCommandRequest, CreateUserCommandResponse>
 	{
 		private readonly IUserService _userService;
 

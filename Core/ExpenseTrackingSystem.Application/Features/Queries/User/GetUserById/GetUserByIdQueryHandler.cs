@@ -1,4 +1,4 @@
-﻿using ExpenseTrackingSystem.Application.Services;
+﻿using ExpenseTrackingSystem.Application.Abstractions.Services;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ExpenseTrackingSystem.Application.Features.Queries.User.GetUserById
 {
-	public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQueryRequest, GetUserByIdQueryResponse>
+    public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQueryRequest, GetUserByIdQueryResponse>
 	{
 		private readonly IUserService _userService;
 

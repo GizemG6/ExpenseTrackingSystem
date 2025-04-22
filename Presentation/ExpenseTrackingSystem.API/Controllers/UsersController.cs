@@ -5,6 +5,7 @@ using ExpenseTrackingSystem.Application.Features.Queries.User.GetAllUsers;
 using ExpenseTrackingSystem.Application.Features.Queries.User.GetUserById;
 using ExpenseTrackingSystem.Application.Features.Queries.User.GetUsersByRole;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,6 +13,7 @@ namespace ExpenseTrackingSystem.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
+	[Authorize(Roles = "Admin")]
 	public class UsersController : ControllerBase
 	{
 		private readonly IMediator _mediator;

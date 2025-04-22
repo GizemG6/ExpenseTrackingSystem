@@ -2,6 +2,7 @@
 using ExpenseTrackingSystem.API.Middlewares;
 using ExpenseTrackingSystem.Application;
 using ExpenseTrackingSystem.Persistence;
+using Microsoft.OpenApi.Models;
 
 namespace ExpenseTrackingSystem.API
 {
@@ -16,7 +17,37 @@ namespace ExpenseTrackingSystem.API
 
 			builder.Services.AddControllers();
 			builder.Services.AddEndpointsApiExplorer();
-			builder.Services.AddSwaggerGen();
+			builder.Services.AddSwaggerGen(c =>
+			{
+				c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
+
+				c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+				{
+					Name = "Authorization",
+					Type = SecuritySchemeType.Http,
+					Scheme = "Bearer",
+					BearerFormat = "JWT",
+					In = ParameterLocation.Header,
+					Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n " +
+								  "Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\n" +
+								  "Example: \"Bearer 12345abcdef\""
+				});
+
+				c.AddSecurityRequirement(new OpenApiSecurityRequirement
+				{
+					{
+						new OpenApiSecurityScheme
+						{
+							Reference = new OpenApiReference
+							{
+								Type = ReferenceType.SecurityScheme,
+								Id = "Bearer"
+							}
+						},
+						Array.Empty<string>()
+					}
+				});
+			});
 
 			var app = builder.Build();
 

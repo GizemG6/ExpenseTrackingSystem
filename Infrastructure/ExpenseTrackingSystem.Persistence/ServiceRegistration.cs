@@ -1,6 +1,7 @@
-﻿using ExpenseTrackingSystem.Application.Repositories;
+﻿using ExpenseTrackingSystem.Application.Abstractions.Services;
+using ExpenseTrackingSystem.Application.Abstractions.Token;
+using ExpenseTrackingSystem.Application.Repositories;
 using ExpenseTrackingSystem.Application.Repositories.Payment;
-using ExpenseTrackingSystem.Application.Services;
 using ExpenseTrackingSystem.Domain.Entities.Identity;
 using ExpenseTrackingSystem.Persistence.Context;
 using ExpenseTrackingSystem.Persistence.Repositories;
@@ -18,7 +19,7 @@ using System.Threading.Tasks;
 
 namespace ExpenseTrackingSystem.Persistence
 {
-	public static class ServiceRegistration
+    public static class ServiceRegistration
 	{
 		public static void AddPersistenceServices(this IServiceCollection services, IConfiguration configuration)
 		{
@@ -34,6 +35,7 @@ namespace ExpenseTrackingSystem.Persistence
 			}).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
 
 			services.AddScoped<IUserService, UserService>();
+			services.AddScoped<ITokenService, TokenService>();
 			services.AddScoped<IExpenseReadRepository, ExpenseReadRepository>();
 			services.AddScoped<IExpenseWriteRepository, ExpenseWriteRepository>();
 			services.AddScoped<IExpenseCategoryReadRepository, ExpenseCategoryReadRepository>();

@@ -1,4 +1,4 @@
-﻿using ExpenseTrackingSystem.Application.Services;
+﻿using ExpenseTrackingSystem.Application.Abstractions.Services;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ExpenseTrackingSystem.Application.Features.Queries.User.GetUsersByRole
 {
-	public class GetUsersByRoleQueryHandler : IRequestHandler<GetUsersByRoleQueryRequest, List<GetUsersByRoleQueryResponse>>
+    public class GetUsersByRoleQueryHandler : IRequestHandler<GetUsersByRoleQueryRequest, List<GetUsersByRoleQueryResponse>>
 	{
 		private readonly IUserService _userService;
 

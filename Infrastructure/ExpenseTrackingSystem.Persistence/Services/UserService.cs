@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using ExpenseTrackingSystem.Application.Abstractions.Services;
 using ExpenseTrackingSystem.Application.Dtos.User;
-using ExpenseTrackingSystem.Application.Services;
 using ExpenseTrackingSystem.Domain.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace ExpenseTrackingSystem.Persistence.Services
 {
-	public class UserService : IUserService
+    public class UserService : IUserService
 	{
 		private readonly UserManager<AppUser> _userManager;
 		private readonly RoleManager<AppRole> _roleManager;
