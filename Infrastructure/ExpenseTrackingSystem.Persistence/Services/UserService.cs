@@ -87,11 +87,6 @@ namespace ExpenseTrackingSystem.Persistence.Services
 			return await _userManager.Users.ToListAsync();
 		}
 
-		public Task<string[]> GetRolesToUserAsync(string userId)
-		{
-			throw new NotImplementedException();
-		}
-
 		public async Task<AppUser> GetUserByIdAsync(string userId)
 		{
 			var user = await _userManager.FindByIdAsync(userId);
@@ -100,6 +95,15 @@ namespace ExpenseTrackingSystem.Persistence.Services
 				throw new Exception("User not found.");
 
 			return user;
+		}
+
+		public async Task<List<UserDto>> GetUsersByRoleAsync(string roleName)
+		{
+			if (!await _roleManager.RoleExistsAsync(roleName))
+				throw new Exception($"Role '{roleName}' does not exist.");
+
+			var users = await _userManager.GetUsersInRoleAsync(roleName);
+			return _mapper.Map<List<UserDto>>(users);
 		}
 
 		public Task UpdatePasswordAsync(string userId, string resetToken, string newPassword)

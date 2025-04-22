@@ -1,9 +1,9 @@
 ﻿using ExpenseTrackingSystem.Application.Features.Commands.User.AssignRoleToUser;
 using ExpenseTrackingSystem.Application.Features.Commands.User.CreateUser;
 using ExpenseTrackingSystem.Application.Features.Commands.User.DeleteUser;
-using ExpenseTrackingSystem.Application.Features.Commands.User.RoleAssign;
 using ExpenseTrackingSystem.Application.Features.Queries.User.GetAllUsers;
 using ExpenseTrackingSystem.Application.Features.Queries.User.GetUserById;
+using ExpenseTrackingSystem.Application.Features.Queries.User.GetUsersByRole;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -32,6 +32,13 @@ namespace ExpenseTrackingSystem.API.Controllers
 		public async Task<IActionResult> GetUserById([FromRoute]GetUserByIdQueryRequest getUserByIdQueryRequest)
 		{
 			GetUserByIdQueryResponse response = await _mediator.Send(getUserByIdQueryRequest);
+			return Ok(response);
+		}
+
+		[HttpGet("role/{RoleName}")]
+		public async Task<IActionResult> GetUsersByRole([FromRoute]GetUsersByRoleQueryRequest getUsersByRoleQueryRequest)
+		{
+			List<GetUsersByRoleQueryResponse> response = await _mediator.Send(getUsersByRoleQueryRequest);
 			return Ok(response);
 		}
 

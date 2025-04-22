@@ -17,6 +17,6 @@ namespace ExpenseTrackingSystem.Application.Services
 		Task UpdatePasswordAsync(string userId, string resetToken, string newPassword);
 		Task<bool> DeleteUserAsync(string userId);
 		Task AssignRoleToUserAsnyc(string userId, string role);
-		Task<string[]> GetRolesToUserAsync(string userId);
+		Task<List<UserDto>> GetUsersByRoleAsync(string roleName);
 	}
 }
