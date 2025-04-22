@@ -1,6 +1,7 @@
 ﻿using ExpenseTrackingSystem.Application.Features.Commands.User.AssignRoleToUser;
 using ExpenseTrackingSystem.Application.Features.Commands.User.CreateUser;
 using ExpenseTrackingSystem.Application.Features.Commands.User.DeleteUser;
+using ExpenseTrackingSystem.Application.Features.Commands.User.UpdatePassword;
 using ExpenseTrackingSystem.Application.Features.Queries.User.GetAllUsers;
 using ExpenseTrackingSystem.Application.Features.Queries.User.GetUserById;
 using ExpenseTrackingSystem.Application.Features.Queries.User.GetUsersByRole;
@@ -55,6 +56,13 @@ namespace ExpenseTrackingSystem.API.Controllers
 		public async Task<IActionResult> AssignRole([FromBody] AssignRoleToUserCommandRequest request)
 		{
 			AssignRoleToUserCommandResponse response = await _mediator.Send(request);
+			return Ok(response);
+		}
+
+		[HttpPost("update-password")]
+		public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordCommandRequest updatePasswordCommandRequest)
+		{
+			UpdatePasswordCommandResponse response = await _mediator.Send(updatePasswordCommandRequest);
 			return Ok(response);
 		}
 

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ExpenseTrackingSystem.Application.Abstractions.Services;
 using ExpenseTrackingSystem.Application.Dtos.User;
+using ExpenseTrackingSystem.Application.Helpers;
 using ExpenseTrackingSystem.Domain.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -106,9 +107,18 @@ namespace ExpenseTrackingSystem.Persistence.Services
 			return _mapper.Map<List<UserDto>>(users);
 		}
 
-		public Task UpdatePasswordAsync(string userId, string resetToken, string newPassword)
+		public async Task UpdatePasswordAsync(string userId, string resetToken, string newPassword)
 		{
-			throw new NotImplementedException();
+			AppUser user = await _userManager.FindByIdAsync(userId);
+			if (user != null)
+			{
+				resetToken = resetToken.UrlDecode();
+				IdentityResult result = await _userManager.ResetPasswordAsync(user, resetToken, newPassword);
+				if (result.Succeeded)
+					await _userManager.UpdateSecurityStampAsync(user);
+				else
+					throw new Exception();
+			}
 		}
 
 		public async Task UpdateRefreshTokenAsync(string refreshToken, AppUser user, DateTime accessTokenDate, int addOnAccessTokenDate)
