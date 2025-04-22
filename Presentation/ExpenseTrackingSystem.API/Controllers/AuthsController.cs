@@ -1,4 +1,5 @@
 ﻿using ExpenseTrackingSystem.Application.Features.Commands.User.LoginUser;
+using ExpenseTrackingSystem.Application.Features.Commands.User.RefreshTokenLogin;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +21,13 @@ namespace ExpenseTrackingSystem.API.Controllers
 		public async Task<IActionResult> Login(LoginUserCommandRequest loginUserCommandRequest)
 		{
 			LoginUserCommandResponse response = await _mediator.Send(loginUserCommandRequest);
+			return Ok(response);
+		}
+
+		[HttpPost("[action]")]
+		public async Task<IActionResult> RefreshTokenLogin(RefreshTokenLoginCommandRequest refreshTokenLoginCommandRequest)
+		{
+			RefreshTokenLoginCommandResponse response = await _mediator.Send(refreshTokenLoginCommandRequest);
 			return Ok(response);
 		}
 	}
