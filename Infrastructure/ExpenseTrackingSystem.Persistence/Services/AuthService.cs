@@ -1,6 +1,7 @@
 ﻿using ExpenseTrackingSystem.Application.Abstractions.Services;
 using ExpenseTrackingSystem.Application.Abstractions.Token;
 using ExpenseTrackingSystem.Application.Dtos.Token;
+using ExpenseTrackingSystem.Application.Helpers;
 using ExpenseTrackingSystem.Domain.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
@@ -21,8 +22,9 @@ namespace ExpenseTrackingSystem.Persistence.Services
 		private readonly ITokenService _tokenService;
 		private readonly SignInManager<AppUser> _signInManager;
 		private readonly IUserService _userService;
+		private readonly IMailService _mailService;
 
-		public AuthService(IConfiguration configuration, UserManager<AppUser> userManager,
+		public AuthService(IConfiguration configuration, UserManager<AppUser> userManager, IMailService mailService,
 			ITokenService tokenService, SignInManager<AppUser> signInManager, IUserService userService)
 		{
 			_configuration = configuration;
@@ -30,6 +32,7 @@ namespace ExpenseTrackingSystem.Persistence.Services
 			_tokenService = tokenService;
 			_signInManager = signInManager;
 			_userService = userService;
+			_mailService = mailService;
 		}
 		public async Task<TokenDto> LoginAsync(string email, string password, int accessTokenLifeTime)
 		{
@@ -56,10 +59,9 @@ namespace ExpenseTrackingSystem.Persistence.Services
 			{
 				string resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-				byte[] tokenBytes = Encoding.UTF8.GetBytes(resetToken);
-				resetToken = WebEncoders.Base64UrlEncode(tokenBytes);
+				resetToken = resetToken.UrlEncode();
 
-				//mail service
+				await _mailService.SendPasswordResetMailAsync(email, user.Id, resetToken);
 			}
 		}
 
