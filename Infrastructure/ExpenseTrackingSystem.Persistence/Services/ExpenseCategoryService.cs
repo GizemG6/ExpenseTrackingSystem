@@ -54,7 +54,7 @@ namespace ExpenseTrackingSystem.Persistence.Services
 			if (category == null) return false;
 
 			category.Name = name;
-			_expenseCategoryWriteRepository.UpdateAsync(category);
+			await _expenseCategoryWriteRepository.UpdateAsync(category);
 			await _expenseCategoryWriteRepository.SaveChangesAsync();
 			return true;
 		}
