@@ -1,6 +1,7 @@
 ﻿using ExpenseTrackingSystem.Application.Features.Commands.ExpenseCategory.Create;
 using ExpenseTrackingSystem.Application.Features.Commands.ExpenseCategory.Delete;
 using ExpenseTrackingSystem.Application.Features.Commands.ExpenseCategory.Update;
+using ExpenseTrackingSystem.Application.Features.Queries.ExpenseCategory.GetAll;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +17,13 @@ namespace ExpenseTrackingSystem.API.Controllers
 		public ExpenseCategoriesController(IMediator mediator)
 		{
 			_mediator = mediator;
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> GetAllExpenseCategories()
+		{
+			var response = await _mediator.Send(new GetAllExpenseCategoriesQueryRequest());
+			return Ok(response);
 		}
 
 		[HttpPost]
