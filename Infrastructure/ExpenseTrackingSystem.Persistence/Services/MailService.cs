@@ -58,8 +58,6 @@ namespace ExpenseTrackingSystem.Persistence.Services
 			mailBody.AppendLine($"<strong>Kullanıcı ID:</strong> {userId}<br>");
 			mailBody.AppendLine($"<strong>Reset Token:</strong> {resetToken}<br><br>");
 			mailBody.AppendLine("Bu bilgileri kullanarak `api/auth/reset-password` endpoint'ine bir istek gönderebilirsiniz.<br>");
-			mailBody.AppendLine("Eğer bu talep size ait değilse, lütfen bu maili dikkate almayınız.<br><br>");
-			mailBody.AppendLine("İyi günler dileriz.");
 
 			await SendMailAsync(new[] { to }, "Şifre Yenileme Talebi", mailBody.ToString());
 		}

@@ -2,7 +2,11 @@
 using ExpenseTrackingSystem.API.Middlewares;
 using ExpenseTrackingSystem.Application;
 using ExpenseTrackingSystem.Persistence;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Security.Claims;
+using System.Text;
 
 namespace ExpenseTrackingSystem.API
 {
@@ -49,6 +53,32 @@ namespace ExpenseTrackingSystem.API
 				});
 			});
 
+			builder.Services.AddAuthentication(options =>
+			{
+				options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+				options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+				options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+			})
+				.AddJwtBearer(options =>
+				{
+					options.TokenValidationParameters = new()
+					{
+						ValidateAudience = true,
+						ValidateIssuer = true,
+						ValidateLifetime = true,
+						ValidateIssuerSigningKey = true,
+
+						ValidAudience = builder.Configuration["Token:Audience"],
+						ValidIssuer = builder.Configuration["Token:Issuer"],
+						IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Token:SecurityKey"])),
+						LifetimeValidator = (notBefore, expires, securityToken, validationParameters) =>
+						{
+							return expires != null && expires > DateTime.UtcNow;
+						},
+						NameClaimType = ClaimTypes.Name
+					};
+				});
+
 			var app = builder.Build();
 
 			if (app.Environment.IsDevelopment())
@@ -61,8 +91,9 @@ namespace ExpenseTrackingSystem.API
 
 			app.UseHttpsRedirection();
 
-			app.UseAuthorization();
+			app.UseAuthentication();
 
+			app.UseAuthorization();
 
 			app.MapControllers();
 
