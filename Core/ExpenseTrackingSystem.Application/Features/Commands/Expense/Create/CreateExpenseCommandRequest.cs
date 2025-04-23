@@ -1,4 +1,5 @@
 ﻿using ExpenseTrackingSystem.Domain.Entities;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -6,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ExpenseTrackingSystem.Application.Dtos.Expense
+namespace ExpenseTrackingSystem.Application.Features.Commands.Expense.Create
 {
-	public class ExpenseCreateDto
+	public class CreateExpenseCommandRequest : IRequest<CreateExpenseCommandResponse>
 	{
 		public string UserId { get; set; }
 		public int CategoryId { get; set; }
@@ -16,7 +17,7 @@ namespace ExpenseTrackingSystem.Application.Dtos.Expense
 		public string? Description { get; set; }
 		public DateTime Date { get; set; }
 		public string Location { get; set; }
-		public ExpenseStatus Status { get; set; } = ExpenseStatus.Pending;
+		public ExpenseStatus Status { get; set; }
 		public IFormFile? ReceiptFile { get; set; }
 	}
 }

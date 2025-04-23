@@ -17,4 +17,8 @@
     <ProjectReference Include="..\..\Infrastructure\ExpenseTrackingSystem.Persistence\ExpenseTrackingSystem.Persistence.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
 </Project>

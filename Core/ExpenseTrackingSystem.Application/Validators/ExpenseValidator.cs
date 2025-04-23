@@ -14,7 +14,7 @@ namespace ExpenseTrackingSystem.Application.Validators
 		public ExpenseValidator()
 		{
 			RuleFor(x => x.UserId)
-				.GreaterThan(0);
+				.NotEmpty();
 
 			RuleFor(x => x.CategoryId)
 				.GreaterThan(0);
