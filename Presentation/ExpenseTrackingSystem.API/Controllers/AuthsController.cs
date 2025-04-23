@@ -1,4 +1,5 @@
 ﻿using ExpenseTrackingSystem.Application.Features.Commands.User.LoginUser;
+using ExpenseTrackingSystem.Application.Features.Commands.User.PasswordReset;
 using ExpenseTrackingSystem.Application.Features.Commands.User.RefreshTokenLogin;
 using ExpenseTrackingSystem.Application.Features.Commands.User.VerifyResetToken;
 using MediatR;
@@ -36,6 +37,13 @@ namespace ExpenseTrackingSystem.API.Controllers
 		public async Task<IActionResult> VerifyResetToken([FromBody] VerifyResetTokenCommandRequest verifyResetTokenCommandRequest)
 		{
 			VerifyResetTokenCommandResponse response = await _mediator.Send(verifyResetTokenCommandRequest);
+			return Ok(response);
+		}
+
+		[HttpPost("password-reset")]
+		public async Task<IActionResult> PasswordReset([FromBody] PasswordResetCommandRequest passwordResetCommandRequest)
+		{
+			PasswordResetCommandResponse response = await _mediator.Send(passwordResetCommandRequest);
 			return Ok(response);
 		}
 	}
