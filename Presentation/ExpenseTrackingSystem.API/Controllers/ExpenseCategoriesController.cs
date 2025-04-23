@@ -2,6 +2,7 @@
 using ExpenseTrackingSystem.Application.Features.Commands.ExpenseCategory.Delete;
 using ExpenseTrackingSystem.Application.Features.Commands.ExpenseCategory.Update;
 using ExpenseTrackingSystem.Application.Features.Queries.ExpenseCategory.GetAll;
+using ExpenseTrackingSystem.Application.Features.Queries.ExpenseCategory.GetById;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +24,13 @@ namespace ExpenseTrackingSystem.API.Controllers
 		public async Task<IActionResult> GetAllExpenseCategories()
 		{
 			var response = await _mediator.Send(new GetAllExpenseCategoriesQueryRequest());
+			return Ok(response);
+		}
+
+		[HttpGet("{Id}")]
+		public async Task<IActionResult> GetExpenseCategoryById([FromRoute]GetExpenseCategoryByIdQueryRequest getExpenseCategoryByIdQueryRequest)
+		{
+			GetExpenseCategoryByIdQueryResponse response = await _mediator.Send(getExpenseCategoryByIdQueryRequest);
 			return Ok(response);
 		}
 
