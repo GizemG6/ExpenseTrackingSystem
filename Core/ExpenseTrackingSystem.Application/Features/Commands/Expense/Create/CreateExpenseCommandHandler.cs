@@ -24,10 +24,8 @@ namespace ExpenseTrackingSystem.Application.Features.Commands.Expense.Create
 			{
 				Amount = request.Amount,
 				CategoryId = request.CategoryId,
-				Description = request.Description,
 				Date = request.Date,
 				Location = request.Location,
-				Status = request.Status,
 				UserId = request.UserId,
 				ReceiptFile = request.ReceiptFile
 			};

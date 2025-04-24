@@ -14,10 +14,8 @@ namespace ExpenseTrackingSystem.Application.Features.Commands.Expense.Create
 		public string UserId { get; set; }
 		public int CategoryId { get; set; }
 		public decimal Amount { get; set; }
-		public string? Description { get; set; }
 		public DateTime Date { get; set; }
 		public string Location { get; set; }
-		public ExpenseStatus Status { get; set; }
 		public IFormFile? ReceiptFile { get; set; }
 	}
 }

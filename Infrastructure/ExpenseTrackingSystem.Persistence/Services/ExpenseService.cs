@@ -1,9 +1,11 @@
 ﻿using ExpenseTrackingSystem.Application.Abstractions.Services;
 using ExpenseTrackingSystem.Application.Dtos.Expense;
+using ExpenseTrackingSystem.Application.Helpers;
 using ExpenseTrackingSystem.Application.Repositories;
 using ExpenseTrackingSystem.Domain.Entities;
 using ExpenseTrackingSystem.Domain.Entities.Identity;
 using ExpenseTrackingSystem.Persistence.Repositories;
+using FluentValidation;
 using Humanizer;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -40,24 +42,7 @@ namespace ExpenseTrackingSystem.Persistence.Services
 			if (category == null)
 				throw new Exception("Category not found");
 
-			string? receiptPath = null;
-
-			if (expenseCreateDto.ReceiptFile != null && expenseCreateDto.ReceiptFile.Length > 0)
-			{
-				var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "receipts");
-				if (!Directory.Exists(folderPath))
-					Directory.CreateDirectory(folderPath);
-
-				var fileName = $"{Guid.NewGuid()}_{expenseCreateDto.ReceiptFile.FileName}";
-				var filePath = Path.Combine(folderPath, fileName);
-
-				using (var stream = new FileStream(filePath, FileMode.Create))
-				{
-					await expenseCreateDto.ReceiptFile.CopyToAsync(stream);
-				}
-
-				receiptPath = Path.Combine("receipts", fileName).Replace("\\", "/");
-			}
+			string? receiptPath = await FileHelper.SaveReceiptFileAsync(expenseCreateDto.ReceiptFile);
 
 			var expense = new Expense
 			{
@@ -67,7 +52,7 @@ namespace ExpenseTrackingSystem.Persistence.Services
 				Amount = expenseCreateDto.Amount,
 				Date = expenseCreateDto.Date,
 				Location = expenseCreateDto.Location,
-				Status = expenseCreateDto.Status,
+				Status = ExpenseStatus.Pending,
 				ReceiptFilePath = receiptPath
 			};
 

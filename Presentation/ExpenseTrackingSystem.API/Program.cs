@@ -1,4 +1,3 @@
-
 using ExpenseTrackingSystem.API.Middlewares;
 using ExpenseTrackingSystem.Application;
 using ExpenseTrackingSystem.Persistence;

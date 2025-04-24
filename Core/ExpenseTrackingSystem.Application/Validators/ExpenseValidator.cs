@@ -29,19 +29,6 @@ namespace ExpenseTrackingSystem.Application.Validators
 			RuleFor(x => x.Location)
 				.NotEmpty()
 				.MaximumLength(100);
-
-			RuleFor(x => x.Description)
-				.MaximumLength(500);
-
-			RuleFor(x => x.ReceiptFile)
-				.Must(BeAValidImage).When(x => x.ReceiptFile != null);
-		}
-
-		private bool BeAValidImage(IFormFile file)
-		{
-			var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
-			var extension = Path.GetExtension(file.FileName).ToLower();
-			return allowedExtensions.Contains(extension);
 		}
 	}
 }
