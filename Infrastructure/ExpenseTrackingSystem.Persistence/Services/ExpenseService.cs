@@ -83,7 +83,10 @@ namespace ExpenseTrackingSystem.Persistence.Services
 
 		public Task<List<Expense>> GetByStatusAsync(ExpenseStatus status)
 		{
-			throw new NotImplementedException();
+			var expenses = _expenseReadRepository.GetAllAsync().Result
+				.Where(e => e.Status == status)
+				.ToList();
+			return Task.FromResult(expenses);
 		}
 
 		public Task<List<Expense>> GetByUserIdAsync(string userId)

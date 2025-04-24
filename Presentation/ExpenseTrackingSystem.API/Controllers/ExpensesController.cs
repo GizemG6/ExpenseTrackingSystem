@@ -1,6 +1,7 @@
 ﻿using ExpenseTrackingSystem.Application.Features.Commands.Expense.Create;
 using ExpenseTrackingSystem.Application.Features.Queries.Expense.GetAll;
 using ExpenseTrackingSystem.Application.Features.Queries.Expense.GetById;
+using ExpenseTrackingSystem.Application.Features.Queries.Expense.GetByStatus;
 using ExpenseTrackingSystem.Application.Features.Queries.ExpenseCategory.GetById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -29,6 +30,13 @@ namespace ExpenseTrackingSystem.API.Controllers
 		public async Task<IActionResult> GetExpenseById([FromRoute]GetExpenseByIdQueryRequest getExpenseByIdQueryRequest)
 		{
 			GetExpenseByIdQueryResponse response = await _mediator.Send(getExpenseByIdQueryRequest);
+			return Ok(response);
+		}
+
+		[HttpGet("status")]
+		public async Task<IActionResult> GetExpensesByStatus([FromQuery]GetExpensesByStatusQueryRequest getExpensesByStatusQueryRequest)
+		{
+			List<GetExpensesByStatusQueryResponse> response = await _mediator.Send(getExpensesByStatusQueryRequest);
 			return Ok(response);
 		}
 
