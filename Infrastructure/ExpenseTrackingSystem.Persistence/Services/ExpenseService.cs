@@ -73,6 +73,16 @@ namespace ExpenseTrackingSystem.Persistence.Services
 			return await _expenseReadRepository.GetAllAsync();
 		}
 
+		public async Task<List<Expense>> GetByFullNameAsync(string fullName)
+		{
+			var user = await _userManager.Users.FirstOrDefaultAsync(u => u.FullName == fullName);
+			if (user == null)
+				throw new Exception("User not found");
+
+			var expenses = _expenseReadRepository.GetWhere(e => e.UserId == user.Id);
+			return await expenses.ToListAsync();
+		}
+
 		public async Task<Expense> GetByIdAsync(Guid id)
 		{
 			var expense = await _expenseReadRepository.GetByIdAsync(id);

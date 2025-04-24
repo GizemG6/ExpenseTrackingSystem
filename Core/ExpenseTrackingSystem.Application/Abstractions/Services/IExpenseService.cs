@@ -17,5 +17,6 @@ namespace ExpenseTrackingSystem.Application.Abstractions.Services
 		Task<bool> DeleteAsync(Guid id);
 		Task<List<Expense>> GetByStatusAsync(ExpenseStatus status);
 		Task<List<Expense>> GetByUserIdAsync(string userId);
+		Task<List<Expense>> GetByFullNameAsync(string fullName);
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using ExpenseTrackingSystem.Application.Features.Commands.Expense.Create;
 using ExpenseTrackingSystem.Application.Features.Queries.Expense.GetAll;
+using ExpenseTrackingSystem.Application.Features.Queries.Expense.GetByFullName;
 using ExpenseTrackingSystem.Application.Features.Queries.Expense.GetById;
 using ExpenseTrackingSystem.Application.Features.Queries.Expense.GetByStatus;
 using ExpenseTrackingSystem.Application.Features.Queries.Expense.GetByUserId;
@@ -44,6 +45,13 @@ namespace ExpenseTrackingSystem.API.Controllers
 		public async Task<IActionResult> GetExpensesByUserId([FromQuery]GetExpensesByUserIdQueryRequest getExpensesByUserIdQueryRequest)
 		{
 			List<GetExpensesByUserIdQueryResponse> response = await _mediator.Send(getExpensesByUserIdQueryRequest);
+			return Ok(response);
+		}
+
+		[HttpGet("by-full-name")]
+		public async Task<IActionResult> GetExpensesByFullName([FromQuery]GetExpensesByFullNameQueryRequest getExpensesByFullNameQueryRequest)
+		{
+			List<GetExpensesByFullNameQueryResponse> response = await _mediator.Send(getExpensesByFullNameQueryRequest);
 			return Ok(response);
 		}
 
