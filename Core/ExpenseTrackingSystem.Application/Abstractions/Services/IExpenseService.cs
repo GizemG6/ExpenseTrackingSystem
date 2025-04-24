@@ -13,7 +13,7 @@ namespace ExpenseTrackingSystem.Application.Abstractions.Services
 		Task<List<Expense>> GetAllAsync();
 		Task<Expense> GetByIdAsync(Guid id);
 		Task<Expense> CreateAsync(ExpenseCreateDto expenseCreateDto);
-		Task<Expense> UpdateAsync(Expense expense);
+		Task<Expense> UpdateStatusAsync(Expense expense);
 		Task<bool> DeleteAsync(Guid id);
 		Task<List<Expense>> GetByStatusAsync(ExpenseStatus status);
 		Task<List<Expense>> GetByUserIdAsync(string userId);

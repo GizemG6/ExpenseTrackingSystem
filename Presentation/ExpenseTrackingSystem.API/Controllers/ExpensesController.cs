@@ -1,4 +1,5 @@
 ﻿using ExpenseTrackingSystem.Application.Features.Commands.Expense.Create;
+using ExpenseTrackingSystem.Application.Features.Commands.Expense.UpdateStatus;
 using ExpenseTrackingSystem.Application.Features.Queries.Expense.GetAll;
 using ExpenseTrackingSystem.Application.Features.Queries.Expense.GetByFullName;
 using ExpenseTrackingSystem.Application.Features.Queries.Expense.GetById;
@@ -59,6 +60,13 @@ namespace ExpenseTrackingSystem.API.Controllers
 		public async Task<IActionResult> CreateExpense([FromForm]CreateExpenseCommandRequest createExpenseCommandRequest)
 		{
 			CreateExpenseCommandResponse response = await _mediator.Send(createExpenseCommandRequest);
+			return Ok(response);
+		}
+
+		[HttpPut]
+		public async Task<IActionResult> UpdateExpenseStatus([FromBody]UpdateExpenseStatusCommandRequest updateExpenseStatusCommandRequest)
+		{
+			UpdateExpenseStatusCommandResponse response = await _mediator.Send(updateExpenseStatusCommandRequest);
 			return Ok(response);
 		}
 	}

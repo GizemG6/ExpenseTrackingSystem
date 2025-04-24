@@ -107,9 +107,26 @@ namespace ExpenseTrackingSystem.Persistence.Services
 			return await expenses.ToListAsync();
 		}
 
-		public Task<Expense> UpdateAsync(Expense expense)
+		public async Task<Expense> UpdateStatusAsync(Expense expense)
 		{
-			throw new NotImplementedException();
+			var existingExpense = await _expenseReadRepository.GetByIdAsync(expense.Id);
+			if (existingExpense == null)
+				throw new Exception("Expense not found");
+
+			if (expense.Status == ExpenseStatus.Rejected && string.IsNullOrWhiteSpace(expense.RejectionReason))
+			{
+				throw new Exception("Rejection reason is required when status is Rejected.");
+			}
+
+			existingExpense.Status = expense.Status;
+			existingExpense.RejectionReason = expense.Status == ExpenseStatus.Rejected
+				? expense.RejectionReason
+				: null;
+
+			await _expenseWriteRepository.UpdateAsync(existingExpense);
+			await _expenseWriteRepository.SaveChangesAsync();
+
+			return existingExpense;
 		}
 	}
 }
