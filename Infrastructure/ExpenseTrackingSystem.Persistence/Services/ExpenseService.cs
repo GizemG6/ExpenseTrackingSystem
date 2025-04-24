@@ -131,10 +131,7 @@ namespace ExpenseTrackingSystem.Persistence.Services
 			if (existingExpense == null)
 				throw new Exception("Expense not found");
 
-			if (expense.Status == ExpenseStatus.Rejected && string.IsNullOrWhiteSpace(expense.RejectionReason))
-			{
-				throw new Exception("Rejection reason is required when status is Rejected.");
-			}
+			ValidateRejectionReason(expense);
 
 			existingExpense.Status = expense.Status;
 			existingExpense.RejectionReason = expense.Status == ExpenseStatus.Rejected
@@ -143,24 +140,37 @@ namespace ExpenseTrackingSystem.Persistence.Services
 
 			if (expense.Status == ExpenseStatus.Approved)
 			{
-				var payment = new PaymentSimulation
-				{
-					Id = Guid.NewGuid(),
-					PaymentDate = DateTime.UtcNow,
-					BankReferenceNo = Guid.NewGuid().ToString().Substring(0, 8).ToUpper(),
-					Expense = existingExpense,
-					PaidAmount = existingExpense.Amount,
-					IBAN = IbanGenerator.GenerateFakeIban(),
-				};
-
-				await _paymentWriteRepository.AddAsync(payment);
-				await _paymentWriteRepository.SaveChangesAsync();
+				await CreatePaymentSimulation(existingExpense);
 			}
 
 			await _expenseWriteRepository.UpdateAsync(existingExpense);
 			await _expenseWriteRepository.SaveChangesAsync();
 
 			return existingExpense;
+		}
+
+		private async Task CreatePaymentSimulation(Expense expense)
+		{
+			var payment = new PaymentSimulation
+			{
+				Id = Guid.NewGuid(),
+				PaymentDate = DateTime.UtcNow,
+				BankReferenceNo = Guid.NewGuid().ToString().Substring(0, 8).ToUpper(),
+				Expense = expense,
+				PaidAmount = expense.Amount,
+				IBAN = IbanGenerator.GenerateFakeIban(),
+			};
+
+			await _paymentWriteRepository.AddAsync(payment);
+			await _paymentWriteRepository.SaveChangesAsync();
+		}
+
+		private void ValidateRejectionReason(Expense expense)
+		{
+			if (expense.Status == ExpenseStatus.Rejected && string.IsNullOrWhiteSpace(expense.RejectionReason))
+			{
+				throw new Exception("Rejection reason is required when status is Rejected.");
+			}
 		}
 	}
 }
