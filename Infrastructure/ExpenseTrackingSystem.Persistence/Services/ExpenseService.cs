@@ -63,9 +63,9 @@ namespace ExpenseTrackingSystem.Persistence.Services
 			return expense;
 		}
 
-		public Task<bool> DeleteAsync(Guid id)
+		public async Task<bool> DeleteAsync(Guid id)
 		{
-			throw new NotImplementedException();
+			return await _expenseWriteRepository.RemoveAsync(id);
 		}
 
 		public async Task<List<Expense>> GetAllAsync()

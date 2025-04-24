@@ -1,4 +1,5 @@
 ﻿using ExpenseTrackingSystem.Application.Features.Commands.Expense.Create;
+using ExpenseTrackingSystem.Application.Features.Commands.Expense.Delete;
 using ExpenseTrackingSystem.Application.Features.Commands.Expense.UpdateStatus;
 using ExpenseTrackingSystem.Application.Features.Queries.Expense.GetAll;
 using ExpenseTrackingSystem.Application.Features.Queries.Expense.GetByCategoryName;
@@ -75,6 +76,13 @@ namespace ExpenseTrackingSystem.API.Controllers
 		public async Task<IActionResult> UpdateExpenseStatus([FromBody]UpdateExpenseStatusCommandRequest updateExpenseStatusCommandRequest)
 		{
 			UpdateExpenseStatusCommandResponse response = await _mediator.Send(updateExpenseStatusCommandRequest);
+			return Ok(response);
+		}
+
+		[HttpDelete("Id")]
+		public async Task<IActionResult> DeleteExpense([FromBody]DeleteExpenseCommandRequest deleteExpenseCommandRequest)
+		{
+			DeleteExpenseCommandResponse response = await _mediator.Send(deleteExpenseCommandRequest);
 			return Ok(response);
 		}
 	}
