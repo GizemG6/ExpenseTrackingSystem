@@ -69,7 +69,7 @@ namespace ExpenseTrackingSystem.Persistence.Services
 
 		public async Task<List<Expense>> GetAllAsync()
 		{
-			throw new NotImplementedException();
+			return await _expenseReadRepository.GetAllAsync();
 		}
 
 		public Task<Expense> GetByIdAsync(Guid id)

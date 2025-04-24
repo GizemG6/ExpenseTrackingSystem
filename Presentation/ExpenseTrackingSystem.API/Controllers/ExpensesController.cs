@@ -1,4 +1,5 @@
 ﻿using ExpenseTrackingSystem.Application.Features.Commands.Expense.Create;
+using ExpenseTrackingSystem.Application.Features.Queries.Expense.GetAll;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,13 @@ namespace ExpenseTrackingSystem.API.Controllers
 		public ExpensesController(IMediator mediator)
 		{
 			_mediator = mediator;
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> GetAllExpenses()
+		{
+			var response = await _mediator.Send(new GetAllExpensesQueryRequest());
+			return Ok(response);
 		}
 
 		[HttpPost]
