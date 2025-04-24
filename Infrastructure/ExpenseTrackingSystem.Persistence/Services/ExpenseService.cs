@@ -72,9 +72,13 @@ namespace ExpenseTrackingSystem.Persistence.Services
 			return await _expenseReadRepository.GetAllAsync();
 		}
 
-		public Task<Expense> GetByIdAsync(Guid id)
+		public async Task<Expense> GetByIdAsync(Guid id)
 		{
-			throw new NotImplementedException();
+			var expense = await _expenseReadRepository.GetByIdAsync(id);
+			if (expense == null)
+				throw new Exception("Expense not found");
+
+			return expense;
 		}
 
 		public Task<List<Expense>> GetByStatusAsync(ExpenseStatus status)
