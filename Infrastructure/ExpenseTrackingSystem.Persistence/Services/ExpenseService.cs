@@ -73,6 +73,21 @@ namespace ExpenseTrackingSystem.Persistence.Services
 			return await _expenseReadRepository.GetAllAsync();
 		}
 
+		public async Task<List<Expense>> GetByCategoryAsync(string categoryName)
+		{
+			var category = await _expenseCategoryReadRepository
+				.GetWhere(c => c.Name.ToLower() == categoryName.ToLower())
+				.FirstOrDefaultAsync();
+
+			if (category == null)
+				throw new Exception("Category not found");
+
+			var expenses = _expenseReadRepository
+				.GetWhere(e => e.CategoryId == category.Id);
+
+			return await expenses.ToListAsync();
+		}
+
 		public async Task<List<Expense>> GetByFullNameAsync(string fullName)
 		{
 			var user = await _userManager.Users.FirstOrDefaultAsync(u => u.FullName == fullName);
