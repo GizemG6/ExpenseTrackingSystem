@@ -8,6 +8,7 @@ using ExpenseTrackingSystem.Persistence.Repositories;
 using FluentValidation;
 using Humanizer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -81,12 +82,10 @@ namespace ExpenseTrackingSystem.Persistence.Services
 			return expense;
 		}
 
-		public Task<List<Expense>> GetByStatusAsync(ExpenseStatus status)
+		public async Task<List<Expense>> GetByStatusAsync(ExpenseStatus status)
 		{
-			var expenses = _expenseReadRepository.GetAllAsync().Result
-				.Where(e => e.Status == status)
-				.ToList();
-			return Task.FromResult(expenses);
+			var expenses = _expenseReadRepository.GetWhere(e => e.Status == status);
+			return await expenses.ToListAsync();
 		}
 
 		public Task<List<Expense>> GetByUserIdAsync(string userId)
