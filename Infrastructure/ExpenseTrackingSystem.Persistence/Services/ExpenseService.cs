@@ -2,11 +2,9 @@
 using ExpenseTrackingSystem.Application.Dtos.Expense;
 using ExpenseTrackingSystem.Application.Helpers;
 using ExpenseTrackingSystem.Application.Repositories;
+using ExpenseTrackingSystem.Application.Repositories.Payment;
 using ExpenseTrackingSystem.Domain.Entities;
 using ExpenseTrackingSystem.Domain.Entities.Identity;
-using ExpenseTrackingSystem.Persistence.Repositories;
-using FluentValidation;
-using Humanizer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -22,15 +20,20 @@ namespace ExpenseTrackingSystem.Persistence.Services
 		private readonly IExpenseReadRepository _expenseReadRepository;
 		private readonly IExpenseWriteRepository _expenseWriteRepository;
 		private readonly IExpenseCategoryReadRepository _expenseCategoryReadRepository;
+		private readonly IPaymentReadRepository _paymentReadRepository;
+		private readonly IPaymentWriteRepository _paymentWriteRepository;
 		private readonly UserManager<AppUser> _userManager;	
 
-		public ExpenseService(IExpenseReadRepository expenseReadRepository, IExpenseWriteRepository expenseWriteRepository, 
-			UserManager<AppUser> userManager, IExpenseCategoryReadRepository expenseCategoryReadRepository)
+		public ExpenseService(IExpenseReadRepository expenseReadRepository, IExpenseWriteRepository expenseWriteRepository,
+			UserManager<AppUser> userManager, IExpenseCategoryReadRepository expenseCategoryReadRepository, 
+			IPaymentReadRepository paymentReadRepository, IPaymentWriteRepository paymentWriteRepository)
 		{
 			_expenseReadRepository = expenseReadRepository;
 			_expenseWriteRepository = expenseWriteRepository;
 			_userManager = userManager;
 			_expenseCategoryReadRepository = expenseCategoryReadRepository;
+			_paymentReadRepository = paymentReadRepository;
+			_paymentWriteRepository = paymentWriteRepository;
 		}
 
 		public async Task<Expense> CreateAsync(ExpenseCreateDto expenseCreateDto)
@@ -137,6 +140,22 @@ namespace ExpenseTrackingSystem.Persistence.Services
 			existingExpense.RejectionReason = expense.Status == ExpenseStatus.Rejected
 				? expense.RejectionReason
 				: null;
+
+			if (expense.Status == ExpenseStatus.Approved)
+			{
+				var payment = new PaymentSimulation
+				{
+					Id = Guid.NewGuid(),
+					PaymentDate = DateTime.UtcNow,
+					BankReferenceNo = Guid.NewGuid().ToString().Substring(0, 8).ToUpper(),
+					Expense = existingExpense,
+					PaidAmount = existingExpense.Amount,
+					IBAN = IbanGenerator.GenerateFakeIban(),
+				};
+
+				await _paymentWriteRepository.AddAsync(payment);
+				await _paymentWriteRepository.SaveChangesAsync();
+			}
 
 			await _expenseWriteRepository.UpdateAsync(existingExpense);
 			await _expenseWriteRepository.SaveChangesAsync();
