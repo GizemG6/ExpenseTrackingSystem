@@ -54,17 +54,25 @@ namespace ExpenseTrackingSystem.Application.Mapper
 				.ForMember(dest => dest.ActionDate, opt => opt.MapFrom(src => src.ActionDate));
 
 			CreateMap<PaymentSimulation, PaymentSimulationDto>()
-			.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-			.ForMember(dest => dest.PaymentDate, opt => opt.MapFrom(src => src.PaymentDate))
-			.ForMember(dest => dest.BankReferenceNo, opt => opt.MapFrom(src => src.BankReferenceNo))
-			.ForMember(dest => dest.PaidAmount, opt => opt.MapFrom(src => src.PaidAmount))
-			.ForMember(dest => dest.IBAN, opt => opt.MapFrom(src => src.IBAN));
+				.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+				.ForMember(dest => dest.ExpenseId, opt => opt.MapFrom(src => src.Expense.Id))
+				.ForMember(dest => dest.PaymentDate, opt => opt.MapFrom(src => src.PaymentDate))
+				.ForMember(dest => dest.BankReferenceNo, opt => opt.MapFrom(src => src.BankReferenceNo))
+				.ForMember(dest => dest.PaidAmount, opt => opt.MapFrom(src => src.PaidAmount))
+				.ForMember(dest => dest.SenderFullName, opt => opt.MapFrom(src => src.SenderFullName))
+				.ForMember(dest => dest.SenderIban, opt => opt.MapFrom(src => src.SenderIban))
+				.ForMember(dest => dest.ReceiverFullName, opt => opt.MapFrom(src => src.ReceiverFullName))
+				.ForMember(dest => dest.ReceiverIban, opt => opt.MapFrom(src => src.ReceiverIban));
 
 			CreateMap<PaymentSimulationCreateDto, PaymentSimulation>()
 				.ForMember(dest => dest.PaymentDate, opt => opt.MapFrom(src => src.PaymentDate))
 				.ForMember(dest => dest.BankReferenceNo, opt => opt.MapFrom(src => src.BankReferenceNo))
 				.ForMember(dest => dest.PaidAmount, opt => opt.MapFrom(src => src.PaidAmount))
-				.ForMember(dest => dest.IBAN, opt => opt.MapFrom(src => src.IBAN));
+				.ForMember(dest => dest.SenderFullName, opt => opt.MapFrom(src => src.SenderFullName))
+				.ForMember(dest => dest.SenderIban, opt => opt.MapFrom(src => src.SenderIban))
+				.ForMember(dest => dest.ReceiverFullName, opt => opt.MapFrom(src => src.ReceiverFullName))
+				.ForMember(dest => dest.ReceiverIban, opt => opt.MapFrom(src => src.ReceiverIban))
+				.ForMember(dest => dest.Expense, opt => opt.Ignore());
 		}
 	}
 }

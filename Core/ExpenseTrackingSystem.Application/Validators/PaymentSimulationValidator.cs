@@ -13,7 +13,7 @@ namespace ExpenseTrackingSystem.Application.Validators
 		public PaymentSimulationValidator()
 		{
 			RuleFor(x => x.ExpenseId)
-				.NotEmpty();
+			.NotEmpty();
 
 			RuleFor(x => x.PaymentDate)
 				.NotEmpty()
@@ -27,7 +27,19 @@ namespace ExpenseTrackingSystem.Application.Validators
 				.NotEmpty()
 				.GreaterThan(0);
 
-			RuleFor(x => x.IBAN)
+			RuleFor(x => x.SenderFullName)
+				.NotEmpty()
+				.MaximumLength(100);
+
+			RuleFor(x => x.SenderIban)
+				.NotEmpty()
+				.Matches(@"^TR\d{2}\d{5}\d{16}$");
+
+			RuleFor(x => x.ReceiverFullName)
+				.NotEmpty()
+				.MaximumLength(100);
+
+			RuleFor(x => x.ReceiverIban)
 				.NotEmpty()
 				.Matches(@"^TR\d{2}\d{5}\d{16}$");
 		}

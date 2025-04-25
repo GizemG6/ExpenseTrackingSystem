@@ -8,6 +8,7 @@ using ExpenseTrackingSystem.Application.Features.Queries.Expense.GetById;
 using ExpenseTrackingSystem.Application.Features.Queries.Expense.GetByStatus;
 using ExpenseTrackingSystem.Application.Features.Queries.Expense.GetByUserId;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ExpenseTrackingSystem.API.Controllers
@@ -73,6 +74,7 @@ namespace ExpenseTrackingSystem.API.Controllers
 		}
 
 		[HttpPut]
+		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> UpdateExpenseStatus([FromBody]UpdateExpenseStatusCommandRequest updateExpenseStatusCommandRequest)
 		{
 			UpdateExpenseStatusCommandResponse response = await _mediator.Send(updateExpenseStatusCommandRequest);

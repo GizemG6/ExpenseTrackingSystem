@@ -12,7 +12,12 @@ namespace ExpenseTrackingSystem.Domain.Entities
 		public DateTime PaymentDate { get; set; }
 		public string BankReferenceNo { get; set; }
 		public Expense Expense { get; set; }
+
 		public decimal PaidAmount { get; set; }
-		public string IBAN { get; set; }
+		public string SenderFullName { get; set; }
+		public string SenderIban { get; set; }
+
+		public string ReceiverFullName { get; set; }
+		public string ReceiverIban { get; set; }
 	}
 }

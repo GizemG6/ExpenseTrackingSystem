@@ -5,6 +5,7 @@ using ExpenseTrackingSystem.Application.Repositories;
 using ExpenseTrackingSystem.Application.Repositories.Payment;
 using ExpenseTrackingSystem.Domain.Entities;
 using ExpenseTrackingSystem.Domain.Entities.Identity;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -22,11 +23,13 @@ namespace ExpenseTrackingSystem.Persistence.Services
 		private readonly IExpenseCategoryReadRepository _expenseCategoryReadRepository;
 		private readonly IPaymentReadRepository _paymentReadRepository;
 		private readonly IPaymentWriteRepository _paymentWriteRepository;
-		private readonly UserManager<AppUser> _userManager;	
+		private readonly UserManager<AppUser> _userManager;
+		private readonly IHttpContextAccessor _httpContextAccessor;
 
 		public ExpenseService(IExpenseReadRepository expenseReadRepository, IExpenseWriteRepository expenseWriteRepository,
 			UserManager<AppUser> userManager, IExpenseCategoryReadRepository expenseCategoryReadRepository, 
-			IPaymentReadRepository paymentReadRepository, IPaymentWriteRepository paymentWriteRepository)
+			IPaymentReadRepository paymentReadRepository, IPaymentWriteRepository paymentWriteRepository,
+			IHttpContextAccessor httpContextAccessor)
 		{
 			_expenseReadRepository = expenseReadRepository;
 			_expenseWriteRepository = expenseWriteRepository;
@@ -34,6 +37,7 @@ namespace ExpenseTrackingSystem.Persistence.Services
 			_expenseCategoryReadRepository = expenseCategoryReadRepository;
 			_paymentReadRepository = paymentReadRepository;
 			_paymentWriteRepository = paymentWriteRepository;
+			_httpContextAccessor = httpContextAccessor;
 		}
 
 		public async Task<Expense> CreateAsync(ExpenseCreateDto expenseCreateDto)
@@ -127,30 +131,45 @@ namespace ExpenseTrackingSystem.Persistence.Services
 
 		public async Task<Expense> UpdateStatusAsync(Expense expense)
 		{
-			var existingExpense = await _expenseReadRepository.GetByIdAsync(expense.Id);
-			if (existingExpense == null)
-				throw new Exception("Expense not found");
+			var existingExpense = await _expenseReadRepository.GetByIdAsync(expense.Id)
+				?? throw new Exception("Expense not found");
 
 			ValidateRejectionReason(expense);
-
-			existingExpense.Status = expense.Status;
-			existingExpense.RejectionReason = expense.Status == ExpenseStatus.Rejected
-				? expense.RejectionReason
-				: null;
+			await UpdateExpenseStatusAsync(existingExpense, expense);
 
 			if (expense.Status == ExpenseStatus.Approved)
-			{
-				await CreatePaymentSimulation(existingExpense);
-			}
-
-			await _expenseWriteRepository.UpdateAsync(existingExpense);
-			await _expenseWriteRepository.SaveChangesAsync();
+				await CreatePaymentSimulationAsync(existingExpense);
 
 			return existingExpense;
 		}
 
-		private async Task CreatePaymentSimulation(Expense expense)
+		private void ValidateRejectionReason(Expense expense)
 		{
+			if (expense.Status == ExpenseStatus.Rejected && string.IsNullOrWhiteSpace(expense.RejectionReason))
+				throw new Exception("Rejection reason is required when status is Rejected.");
+		}
+
+		private async Task UpdateExpenseStatusAsync(Expense existingExpense, Expense updatedExpense)
+		{
+			existingExpense.Status = updatedExpense.Status;
+			existingExpense.RejectionReason = updatedExpense.Status == ExpenseStatus.Rejected
+				? updatedExpense.RejectionReason
+				: null;
+
+			await _expenseWriteRepository.UpdateAsync(existingExpense);
+			await _expenseWriteRepository.SaveChangesAsync();
+		}
+
+		private async Task CreatePaymentSimulationAsync(Expense expense)
+		{
+			var receiver = await _userManager.FindByIdAsync(expense.UserId)
+				?? throw new Exception("Receiver (AppUser) not found for the expense.");
+
+			var currentUser = _httpContextAccessor.HttpContext?.User;
+
+			var sender = await _userManager.GetUserAsync(currentUser)
+				?? throw new Exception("Current admin user not found.");
+
 			var payment = new PaymentSimulation
 			{
 				Id = Guid.NewGuid(),
@@ -158,19 +177,14 @@ namespace ExpenseTrackingSystem.Persistence.Services
 				BankReferenceNo = Guid.NewGuid().ToString().Substring(0, 8).ToUpper(),
 				Expense = expense,
 				PaidAmount = expense.Amount,
-				IBAN = IbanGenerator.GenerateFakeIban(),
+				SenderFullName = sender.FullName,
+				SenderIban = sender.IBAN,
+				ReceiverFullName = receiver.FullName,
+				ReceiverIban = receiver.IBAN
 			};
 
 			await _paymentWriteRepository.AddAsync(payment);
 			await _paymentWriteRepository.SaveChangesAsync();
-		}
-
-		private void ValidateRejectionReason(Expense expense)
-		{
-			if (expense.Status == ExpenseStatus.Rejected && string.IsNullOrWhiteSpace(expense.RejectionReason))
-			{
-				throw new Exception("Rejection reason is required when status is Rejected.");
-			}
 		}
 	}
 }

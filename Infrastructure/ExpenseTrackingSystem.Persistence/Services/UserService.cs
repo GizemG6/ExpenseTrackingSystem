@@ -55,10 +55,12 @@ namespace ExpenseTrackingSystem.Persistence.Services
 
 		public async Task<UserCreateResponseDto> CreateAsync(UserCreateDto model)
 		{
+
 			AppUser user = _mapper.Map<AppUser>(model);
 
 			user.Id = Guid.NewGuid().ToString();
 			user.UserName = GenerateValidUsername(model.FullName);
+			model.IBAN = IbanGenerator.GenerateFakeIban();
 
 			IdentityResult result = await _userManager.CreateAsync(user, model.Password);
 
