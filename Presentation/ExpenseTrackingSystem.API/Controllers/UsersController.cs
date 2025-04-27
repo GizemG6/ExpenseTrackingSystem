@@ -14,7 +14,7 @@ namespace ExpenseTrackingSystem.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	//[Authorize(Roles = "Admin")]
+	[Authorize(Roles = "Admin")]
 	public class UsersController : ControllerBase
 	{
 		private readonly IMediator _mediator;
@@ -25,6 +25,8 @@ namespace ExpenseTrackingSystem.API.Controllers
 		}
 
 		[HttpGet]
+		[Authorize(Roles = "Admin")]
+
 		public async Task<IActionResult> GetAllUsers()
 		{
 			var response = await _mediator.Send(new GetAllUsersQueryRequest());

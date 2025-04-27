@@ -4,6 +4,7 @@ using ExpenseTrackingSystem.Application.Features.Commands.ExpenseCategory.Update
 using ExpenseTrackingSystem.Application.Features.Queries.ExpenseCategory.GetAll;
 using ExpenseTrackingSystem.Application.Features.Queries.ExpenseCategory.GetById;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,7 +12,8 @@ namespace ExpenseTrackingSystem.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ExpenseCategoriesController : ControllerBase
+	[Authorize(Roles = "Admin")]
+	public class ExpenseCategoriesController : ControllerBase
     {
         private readonly IMediator _mediator;
 

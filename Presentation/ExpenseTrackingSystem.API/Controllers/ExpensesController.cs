@@ -25,6 +25,7 @@ namespace ExpenseTrackingSystem.API.Controllers
 		}
 
 		[HttpGet]
+		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> GetAllExpenses()
 		{
 			var response = await _mediator.Send(new GetAllExpensesQueryRequest());
@@ -32,6 +33,7 @@ namespace ExpenseTrackingSystem.API.Controllers
 		}
 
 		[HttpGet("{Id}")]
+		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> GetExpenseById([FromRoute]GetExpenseByIdQueryRequest getExpenseByIdQueryRequest)
 		{
 			GetExpenseByIdQueryResponse response = await _mediator.Send(getExpenseByIdQueryRequest);
@@ -82,6 +84,7 @@ namespace ExpenseTrackingSystem.API.Controllers
 		}
 
 		[HttpDelete("Id")]
+		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> DeleteExpense([FromBody]DeleteExpenseCommandRequest deleteExpenseCommandRequest)
 		{
 			DeleteExpenseCommandResponse response = await _mediator.Send(deleteExpenseCommandRequest);
