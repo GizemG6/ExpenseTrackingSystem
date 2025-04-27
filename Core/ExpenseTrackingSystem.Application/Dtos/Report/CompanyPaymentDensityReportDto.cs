@@ -8,7 +8,6 @@ namespace ExpenseTrackingSystem.Application.Dtos.Report
 {
     public class CompanyPaymentDensityReportDto
     {
-        public DateTime Date { get; set; }
         public decimal TotalAmount { get; set; }
         public int PaymentCount { get; set; }
     }

@@ -169,7 +169,7 @@ namespace ExpenseTrackingSystem.Persistence.Services
 						COUNT(CASE WHEN e.Status = @Approved THEN 1 END) AS ApprovedCount,
 						COUNT(CASE WHEN e.Status = @Rejected THEN 1 END) AS RejectedCount
 					FROM Expenses e
-					WHERE CAST(e.Date AS DATE) BETWEEN @StartDate AND @EndDate
+					WHERE e.Date BETWEEN @StartDate AND @EndDate
 					GROUP BY CAST(e.Date AS DATE)
 					ORDER BY Date";
 			}
@@ -199,7 +199,7 @@ namespace ExpenseTrackingSystem.Persistence.Services
 						COUNT(CASE WHEN e.Status = @Approved THEN 1 END) AS ApprovedCount,
 						COUNT(CASE WHEN e.Status = @Rejected THEN 1 END) AS RejectedCount
 					FROM Expenses e
-					WHERE CAST(e.Date AS DATE) BETWEEN @StartDate AND @EndDate
+					WHERE e.Date BETWEEN @StartDate AND @EndDate
 					GROUP BY YEAR(e.Date), MONTH(e.Date)
 					ORDER BY Year, Month";
 			}
