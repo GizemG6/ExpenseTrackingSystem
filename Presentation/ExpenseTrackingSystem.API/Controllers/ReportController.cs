@@ -37,9 +37,9 @@ namespace ExpenseTrackingSystem.API.Controllers
 		}
 
 		[HttpGet("employee-expense-density")]
-		public async Task<IActionResult> GetEmployeeExpenseDensity([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
+		public async Task<IActionResult> GetEmployeeExpenseDensity([FromQuery] DateTime startDate, [FromQuery] DateTime endDate, string reportType)
 		{
-			var result = await _reportService.GetEmployeeExpenseDensityAsync(startDate, endDate);
+			var result = await _reportService.GetEmployeeExpenseDensityAsync(startDate, endDate, reportType);
 
 			if (result == null || !result.Any())
 				return NotFound("No expense data found for the given date range.");

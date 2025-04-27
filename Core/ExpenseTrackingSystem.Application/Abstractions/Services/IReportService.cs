@@ -11,7 +11,7 @@ namespace ExpenseTrackingSystem.Application.Abstractions.Services
     {
 		Task<IEnumerable<EmployeeRequestReportDto>> GetEmployeeRequestsAsync(string userId);
 		Task<IEnumerable<CompanyPaymentDensityReportDto>> GetCompanyPaymentDensityAsync(DateTime startDate, DateTime endDate, string reportType);
-		Task<IEnumerable<EmployeeExpenseDensityReportDto>> GetEmployeeExpenseDensityAsync(DateTime startDate, DateTime endDate);
+		Task<IEnumerable<EmployeeExpenseDensityReportDto>> GetEmployeeExpenseDensityAsync(DateTime startDate, DateTime endDate, string reportType);
 		Task<IEnumerable<ApprovalStatusReportDto>> GetExpenseApprovalStatusAsync(DateTime startDate, DateTime endDate, string reportType);
 	}
 }

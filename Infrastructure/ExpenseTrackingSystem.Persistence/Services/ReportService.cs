@@ -98,21 +98,55 @@ namespace ExpenseTrackingSystem.Persistence.Services
 			return await connection.QueryAsync<CompanyPaymentDensityReportDto>(sqlQuery, parameters);
 		}
 
-		public async Task<IEnumerable<EmployeeExpenseDensityReportDto>> GetEmployeeExpenseDensityAsync(DateTime startDate, DateTime endDate)
+		public async Task<IEnumerable<EmployeeExpenseDensityReportDto>> GetEmployeeExpenseDensityAsync(DateTime startDate, DateTime endDate, string reportType)
 		{
 			using var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
 
-			var sqlQuery = @"
-				SELECT 
-					u.FullName, 
-					CAST(e.Date AS DATE) AS Date, 
-					SUM(e.Amount) AS TotalAmount,
-					COUNT(*) AS ExpenseCount
-				FROM Expenses e
-				INNER JOIN AppUsers u ON u.Id = e.UserId
-				WHERE e.Date BETWEEN @StartDate AND @EndDate
-				GROUP BY u.FullName, CAST(e.Date AS DATE)
-				ORDER BY Date, u.FullName";
+			string sqlQuery = string.Empty;
+
+			if (reportType == "daily")
+			{
+				sqlQuery = @"
+					SELECT 
+						u.FullName, 
+						SUM(e.Amount) AS TotalAmount,
+						COUNT(*) AS ExpenseCount
+					FROM Expenses e
+					INNER JOIN AspNetUsers u ON u.Id = e.UserId
+					WHERE e.Date BETWEEN @StartDate AND @EndDate
+					GROUP BY u.FullName, CAST(e.Date AS DATE)
+					ORDER BY u.FullName";
+			}
+			else if (reportType == "weekly")
+			{
+				sqlQuery = @"
+					SELECT 
+						u.FullName, 
+						SUM(e.Amount) AS TotalAmount,
+						COUNT(*) AS ExpenseCount
+					FROM Expenses e
+					INNER JOIN AspNetUsers u ON u.Id = e.UserId
+					WHERE e.Date BETWEEN @StartDate AND @EndDate
+					GROUP BY u.FullName, DATEPART(YEAR, e.Date), DATEPART(WEEK, e.Date)
+					ORDER BY u.FullName";
+			}
+			else if (reportType == "monthly")
+			{
+				sqlQuery = @"
+					SELECT 
+						u.FullName, 
+						SUM(e.Amount) AS TotalAmount,
+						COUNT(*) AS ExpenseCount
+					FROM Expenses e
+					INNER JOIN AspNetUsers u ON u.Id = e.UserId
+					WHERE e.Date BETWEEN @StartDate AND @EndDate
+					GROUP BY u.FullName, YEAR(e.Date), MONTH(e.Date)
+					ORDER BY u.FullName";
+			}
+			else
+			{
+				throw new ArgumentException("Invalid report type. Valid types are: daily, weekly, monthly.");
+			}
 
 			var parameters = new { StartDate = startDate, EndDate = endDate };
 
