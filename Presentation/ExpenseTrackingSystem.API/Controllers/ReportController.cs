@@ -26,9 +26,9 @@ namespace ExpenseTrackingSystem.API.Controllers
 		}
 
 		[HttpGet("company-payment-density")]
-		public async Task<IActionResult> GetCompanyPaymentDensity([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
+		public async Task<IActionResult> GetCompanyPaymentDensity([FromQuery] DateTime startDate, [FromQuery] DateTime endDate, string reportType)
 		{
-			var result = await _reportService.GetCompanyPaymentDensityAsync(startDate, endDate);
+			var result = await _reportService.GetCompanyPaymentDensityAsync(startDate, endDate, reportType);
 
 			if (result == null || !result.Any())
 				return NotFound("No payment data found for the given date range.");

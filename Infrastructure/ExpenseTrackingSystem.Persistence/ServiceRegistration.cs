@@ -41,7 +41,6 @@ namespace ExpenseTrackingSystem.Persistence
 			services.AddScoped<IExpenseCategoryService, ExpenseCategoryService>();
 			services.AddScoped<IExpenseService, ExpenseService>();
 			services.AddScoped<IExpenseCategoryService, ExpenseCategoryService>();
-			services.AddScoped<IAuditLogService, AuditLogService>();
 			services.AddScoped<IReportService, ReportService>();
 			services.AddScoped<IExpenseReadRepository, ExpenseReadRepository>();
 			services.AddScoped<IExpenseWriteRepository, ExpenseWriteRepository>();

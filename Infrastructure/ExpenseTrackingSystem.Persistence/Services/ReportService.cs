@@ -49,19 +49,49 @@ namespace ExpenseTrackingSystem.Persistence.Services
 			return await connection.QueryAsync<EmployeeRequestReportDto>(sql, new { UserId = userId });
 		}
 
-		public async Task<IEnumerable<CompanyPaymentDensityReportDto>> GetCompanyPaymentDensityAsync(DateTime startDate, DateTime endDate)
+		public async Task<IEnumerable<CompanyPaymentDensityReportDto>> GetCompanyPaymentDensityAsync(DateTime startDate, DateTime endDate, string reportType)
 		{
 			using var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
 
-			var sqlQuery = @"
-				SELECT 
-					CAST(PaymentDate AS DATE) AS Date, 
-					SUM(PaidAmount) AS TotalAmount,
-					COUNT(*) AS PaymentCount
-				FROM PaymentSimulations
-				WHERE PaymentDate BETWEEN @StartDate AND @EndDate
-				GROUP BY CAST(PaymentDate AS DATE)
-				ORDER BY Date";
+			string sqlQuery = string.Empty;
+
+			if (reportType == "daily")
+			{
+				sqlQuery = @"
+					SELECT 
+						SUM(PaidAmount) AS TotalAmount,
+						COUNT(*) AS PaymentCount
+					FROM PaymentSimulations
+					WHERE CAST(PaymentDate AS DATE) BETWEEN @StartDate AND @EndDate
+					GROUP BY CAST(PaymentDate AS DATE)
+					ORDER BY CAST(PaymentDate AS DATE)";
+			}
+			else if (reportType == "weekly")
+			{
+				sqlQuery = @"
+					SELECT 
+						SUM(PaidAmount) AS TotalAmount,
+						COUNT(*) AS PaymentCount
+					FROM PaymentSimulations
+					WHERE PaymentDate BETWEEN @StartDate AND @EndDate
+					GROUP BY DATEPART(YEAR, PaymentDate), DATEPART(WEEK, PaymentDate)
+					ORDER BY DATEPART(YEAR, PaymentDate), DATEPART(WEEK, PaymentDate)";
+			}
+			else if (reportType == "monthly")
+			{
+				sqlQuery = @"
+					SELECT 
+						SUM(PaidAmount) AS TotalAmount,
+						COUNT(*) AS PaymentCount
+					FROM PaymentSimulations
+					WHERE PaymentDate BETWEEN @StartDate AND @EndDate
+					GROUP BY YEAR(PaymentDate), MONTH(PaymentDate)
+					ORDER BY YEAR(PaymentDate), MONTH(PaymentDate)";
+			}
+			else
+			{
+				throw new ArgumentException("Invalid report type. Valid types are: daily, weekly, monthly.");
+			}
 
 			var parameters = new { StartDate = startDate, EndDate = endDate };
 
