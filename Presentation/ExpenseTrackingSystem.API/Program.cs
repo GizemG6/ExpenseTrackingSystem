@@ -1,14 +1,13 @@
 using ExpenseTrackingSystem.API.Middlewares;
 using ExpenseTrackingSystem.Application;
+using ExpenseTrackingSystem.Infrastructure;
 using ExpenseTrackingSystem.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Core;
 using Serilog.Sinks.MSSqlServer;
-using System.Collections.ObjectModel;
 using System.Security.Claims;
 using System.Text;
 
@@ -22,6 +21,7 @@ namespace ExpenseTrackingSystem.API
 
 			builder.Services.AddApplicationServices(builder.Configuration);
 			builder.Services.AddPersistenceServices(builder.Configuration);
+			builder.Services.AddInfrastructureServices(builder.Configuration);
 
 			builder.Services.AddControllers();
 			builder.Services.AddEndpointsApiExplorer();
