@@ -24,13 +24,15 @@ namespace ExpenseTrackingSystem.Persistence.Services
 		private readonly IPaymentReadRepository _paymentReadRepository;
 		private readonly IPaymentWriteRepository _paymentWriteRepository;
 		private readonly UserManager<AppUser> _userManager;
+		private readonly RoleManager<AppRole> _roleManager;
 		private readonly IHttpContextAccessor _httpContextAccessor;
 		private readonly IAuditLogService _auditLogService;
+		private readonly IMailService _mailService;
 
 		public ExpenseService(IExpenseReadRepository expenseReadRepository, IExpenseWriteRepository expenseWriteRepository,
 			UserManager<AppUser> userManager, IExpenseCategoryReadRepository expenseCategoryReadRepository, 
 			IPaymentReadRepository paymentReadRepository, IPaymentWriteRepository paymentWriteRepository,
-			IHttpContextAccessor httpContextAccessor, IAuditLogService auditLogService)
+			IHttpContextAccessor httpContextAccessor, IAuditLogService auditLogService, IMailService mailService, RoleManager<AppRole> roleManager)
 		{
 			_expenseReadRepository = expenseReadRepository;
 			_expenseWriteRepository = expenseWriteRepository;
@@ -40,6 +42,8 @@ namespace ExpenseTrackingSystem.Persistence.Services
 			_paymentWriteRepository = paymentWriteRepository;
 			_httpContextAccessor = httpContextAccessor;
 			_auditLogService = auditLogService;
+			_mailService = mailService;
+			_roleManager = roleManager;
 		}
 
 		public async Task<Expense> CreateAsync(ExpenseCreateDto expenseCreateDto)
@@ -69,6 +73,8 @@ namespace ExpenseTrackingSystem.Persistence.Services
 			await _expenseWriteRepository.AddAsync(expense);
 			await _expenseWriteRepository.SaveChangesAsync();
 			await _auditLogService.LogActionAsync(expense.UserId, "Create", "Expense", expense.Id.ToString());
+
+			await SendExpenseCreatedMailAsync(user, category, expense);
 
 			return expense;
 		}
@@ -143,6 +149,13 @@ namespace ExpenseTrackingSystem.Persistence.Services
 			if (expense.Status == ExpenseStatus.Approved)
 				await CreatePaymentSimulationAsync(existingExpense);
 
+			var user = await _userManager.FindByIdAsync(existingExpense.UserId);
+			if (user != null)
+			{
+				string expenseStatus = expense.Status.ToString();
+				await _mailService.SendExpenseStatusUpdateMailAsync(user.Email, expenseStatus, expense.Id.ToString());
+			}
+
 			await _auditLogService.LogActionAsync(expense.UserId, "UpdateStatus", "Expense", expense.Id.ToString());
 
 			return existingExpense;
@@ -190,6 +203,44 @@ namespace ExpenseTrackingSystem.Persistence.Services
 
 			await _paymentWriteRepository.AddAsync(payment);
 			await _paymentWriteRepository.SaveChangesAsync();
+		}
+
+		private async Task<IEnumerable<string>> GetAdminEmailsAsync()
+		{
+			var adminRole = await _roleManager.FindByNameAsync("Admin");
+
+			if (adminRole == null)
+			{
+				return Enumerable.Empty<string>();
+			}
+
+			var users = await _userManager.Users.ToListAsync();
+
+			var adminEmails = new List<string>();
+
+			foreach (var user in users)
+			{
+				if (await _userManager.IsInRoleAsync(user, adminRole.Name))
+				{
+					adminEmails.Add(user.Email);
+				}
+			}
+
+			return adminEmails;
+		}
+
+		private async Task SendExpenseCreatedMailAsync(AppUser user, ExpenseCategory category, Expense expense)
+		{
+			var adminEmails = await GetAdminEmailsAsync();
+
+			await _mailService.SendExpenseCreatedMailAsync(
+				adminEmails.ToArray(),
+				user.UserName,
+				category.Name,
+				expense.Amount,
+				expense.Date,
+				expense.Id.ToString()
+			);
 		}
 	}
 }

@@ -19,6 +19,33 @@ namespace ExpenseTrackingSystem.Persistence.Services
 			_configuration = configuration;
 		}
 
+		public async Task SendExpenseCreatedMailAsync(string[] adminEmails, string userName, string categoryName, decimal amount, DateTime date, string expenseId)
+		{
+			StringBuilder mailBody = new();
+			mailBody.AppendLine("Merhaba,<br><br>");
+			mailBody.AppendLine($"Yeni bir masrafınız oluşturulmuştur. İşte detaylar:<br><br>");
+			mailBody.AppendLine($"<strong>Masraf ID:</strong> {expenseId}<br>");
+			mailBody.AppendLine($"<strong>Kullanıcı Adı:</strong> {userName}<br>");
+			mailBody.AppendLine($"<strong>Kategori:</strong> {categoryName}<br>");
+			mailBody.AppendLine($"<strong>Tutar:</strong> {amount:C}<br>");
+			mailBody.AppendLine($"<strong>Tarih:</strong> {date:dd/MM/yyyy}<br><br>");
+			mailBody.AppendLine("Masrafınızı sistemde takip edebilirsiniz.<br>");
+
+			await SendMailAsync(adminEmails, "Yeni Masraf Oluşturuldu", mailBody.ToString());
+		}
+
+		public async Task SendExpenseStatusUpdateMailAsync(string toEmail, string expenseStatus, string expenseId)
+		{
+			StringBuilder mailBody = new();
+			mailBody.AppendLine("Merhaba,<br><br>");
+			mailBody.AppendLine($"Masrafınızın durumu şu şekilde güncellenmiştir:<br><br>");
+			mailBody.AppendLine($"<strong>Masraf ID:</strong> {expenseId}<br>");
+			mailBody.AppendLine($"<strong>Durum:</strong> {expenseStatus}<br><br>");
+			mailBody.AppendLine("Masraf durumu hakkında daha fazla bilgi almak için sistemle iletişime geçebilirsiniz.<br>");
+
+			await SendMailAsync(new[] { toEmail }, "Masraf Durumu Güncellenmiştir", mailBody.ToString());
+		}
+
 		public async Task SendMailAsync(string[] tos, string subject, string body, bool isBodyHtml = true)
 		{
 			var smtpSettings = _configuration.GetSection("MailSettings");

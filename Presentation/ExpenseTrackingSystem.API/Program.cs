@@ -19,13 +19,16 @@ namespace ExpenseTrackingSystem.API
 		{
 			var builder = WebApplication.CreateBuilder(args);
 
+			#region Services
 			builder.Services.AddApplicationServices(builder.Configuration);
 			builder.Services.AddPersistenceServices(builder.Configuration);
 			builder.Services.AddInfrastructureServices(builder.Configuration);
+			#endregion
 
 			builder.Services.AddControllers();
 			builder.Services.AddEndpointsApiExplorer();
 
+			#region Serilog Configuration
 			var columnOptions = new ColumnOptions();
 
 			Logger log = new LoggerConfiguration()
@@ -39,7 +42,9 @@ namespace ExpenseTrackingSystem.API
 				.CreateLogger();
 
 			builder.Host.UseSerilog(log);
+			#endregion
 
+			#region Swagger Configuration
 			builder.Services.AddSwaggerGen(c =>
 			{
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
@@ -71,7 +76,9 @@ namespace ExpenseTrackingSystem.API
 					}
 				});
 			});
+			#endregion
 
+			#region JWT Authentication
 			builder.Services.AddAuthentication(options =>
 			{
 				options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -97,6 +104,7 @@ namespace ExpenseTrackingSystem.API
 						NameClaimType = ClaimTypes.Name
 					};
 				});
+			#endregion
 
 			var app = builder.Build();
 
