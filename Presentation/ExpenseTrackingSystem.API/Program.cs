@@ -2,8 +2,13 @@ using ExpenseTrackingSystem.API.Middlewares;
 using ExpenseTrackingSystem.Application;
 using ExpenseTrackingSystem.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
+using Serilog.Core;
+using Serilog.Sinks.MSSqlServer;
+using System.Collections.ObjectModel;
 using System.Security.Claims;
 using System.Text;
 
@@ -20,6 +25,21 @@ namespace ExpenseTrackingSystem.API
 
 			builder.Services.AddControllers();
 			builder.Services.AddEndpointsApiExplorer();
+
+			var columnOptions = new ColumnOptions();
+
+			Logger log = new LoggerConfiguration()
+				.WriteTo.Console()
+				.WriteTo.File("logs/log.txt")
+				.WriteTo.MSSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
+				sinkOptions: new MSSqlServerSinkOptions { TableName = "Logs", AutoCreateSqlTable = true },
+				columnOptions: columnOptions)
+				.Enrich.FromLogContext()
+				.MinimumLevel.Information()
+				.CreateLogger();
+
+			builder.Host.UseSerilog(log);
+
 			builder.Services.AddSwaggerGen(c =>
 			{
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });

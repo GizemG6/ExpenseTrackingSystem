@@ -33,7 +33,6 @@ namespace ExpenseTrackingSystem.API.Controllers
 		}
 
 		[HttpGet("{Id}")]
-		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> GetExpenseById([FromRoute]GetExpenseByIdQueryRequest getExpenseByIdQueryRequest)
 		{
 			GetExpenseByIdQueryResponse response = await _mediator.Send(getExpenseByIdQueryRequest);

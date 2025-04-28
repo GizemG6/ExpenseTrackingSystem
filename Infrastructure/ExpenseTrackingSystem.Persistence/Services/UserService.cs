@@ -133,11 +133,6 @@ namespace ExpenseTrackingSystem.Persistence.Services
 				throw new Exception("User not found");
 		}
 
-		public Task<bool> UpdateUserAsync(AppUser user)
-		{
-			throw new NotImplementedException();
-		}
-
 		private string GenerateValidUsername(string fullName)
 		{
 			var normalized = fullName

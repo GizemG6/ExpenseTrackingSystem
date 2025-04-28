@@ -13,7 +13,6 @@ namespace ExpenseTrackingSystem.Application.Abstractions.Services
         Task<UserCreateResponseDto> CreateAsync(UserCreateDto model);
         Task<AppUser> GetUserByIdAsync(string userId);
         Task<List<AppUser>> GetAllUsersAsync();
-        Task<bool> UpdateUserAsync(AppUser user);
         Task UpdatePasswordAsync(string userId, string resetToken, string newPassword);
         Task<bool> DeleteUserAsync(string userId);
         Task AssignRoleToUserAsnyc(string userId, string role);

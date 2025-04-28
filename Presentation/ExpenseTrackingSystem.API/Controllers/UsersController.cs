@@ -14,7 +14,6 @@ namespace ExpenseTrackingSystem.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	[Authorize(Roles = "Admin")]
 	public class UsersController : ControllerBase
 	{
 		private readonly IMediator _mediator;
@@ -26,7 +25,6 @@ namespace ExpenseTrackingSystem.API.Controllers
 
 		[HttpGet]
 		[Authorize(Roles = "Admin")]
-
 		public async Task<IActionResult> GetAllUsers()
 		{
 			var response = await _mediator.Send(new GetAllUsersQueryRequest());
@@ -41,6 +39,7 @@ namespace ExpenseTrackingSystem.API.Controllers
 		}
 
 		[HttpGet("role/{RoleName}")]
+		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> GetUsersByRole([FromRoute]GetUsersByRoleQueryRequest getUsersByRoleQueryRequest)
 		{
 			List<GetUsersByRoleQueryResponse> response = await _mediator.Send(getUsersByRoleQueryRequest);
@@ -48,6 +47,7 @@ namespace ExpenseTrackingSystem.API.Controllers
 		}
 
 		[HttpPost]
+		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> CreateUser(CreateUserCommandRequest createUserCommandRequest)
 		{
 			CreateUserCommandResponse response = await _mediator.Send(createUserCommandRequest);
@@ -55,6 +55,7 @@ namespace ExpenseTrackingSystem.API.Controllers
 		}
 
 		[HttpPost("assign-role")]
+		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> AssignRole([FromBody] AssignRoleToUserCommandRequest request)
 		{
 			AssignRoleToUserCommandResponse response = await _mediator.Send(request);
@@ -69,6 +70,7 @@ namespace ExpenseTrackingSystem.API.Controllers
 		}
 
 		[HttpDelete("{Id}")]
+		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> DeleteUser([FromRoute]DeleteUserCommandRequest deleteUserCommandRequest)
 		{
 			DeleteUserCommandResponse response = await _mediator.Send(deleteUserCommandRequest);

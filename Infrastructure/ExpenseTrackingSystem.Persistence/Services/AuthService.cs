@@ -23,9 +23,10 @@ namespace ExpenseTrackingSystem.Persistence.Services
 		private readonly SignInManager<AppUser> _signInManager;
 		private readonly IUserService _userService;
 		private readonly IMailService _mailService;
+		private readonly IAuditLogService _auditLogService;
 
 		public AuthService(IConfiguration configuration, UserManager<AppUser> userManager, IMailService mailService,
-			ITokenService tokenService, SignInManager<AppUser> signInManager, IUserService userService)
+			ITokenService tokenService, SignInManager<AppUser> signInManager, IUserService userService, IAuditLogService auditLogService)
 		{
 			_configuration = configuration;
 			_userManager = userManager;
@@ -33,12 +34,22 @@ namespace ExpenseTrackingSystem.Persistence.Services
 			_signInManager = signInManager;
 			_userService = userService;
 			_mailService = mailService;
+			_auditLogService = auditLogService;
 		}
 		public async Task<TokenDto> LoginAsync(string email, string password, int accessTokenLifeTime)
 		{
 			var user = await _userManager.FindByEmailAsync(email);
 			if (user == null)
 				throw new Exception("Not found user");
+
+			if (user != null)
+			{
+				await _auditLogService.LogActionAsync(user.Id, "Login", "User", user.Id.ToString());
+			}
+			else
+			{
+				await _auditLogService.LogActionAsync(user.UserName, "Failed Login", "User", user.UserName);
+			}
 
 			SignInResult result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
 			if (result.Succeeded)

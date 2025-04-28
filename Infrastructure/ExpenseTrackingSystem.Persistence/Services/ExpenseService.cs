@@ -25,11 +25,12 @@ namespace ExpenseTrackingSystem.Persistence.Services
 		private readonly IPaymentWriteRepository _paymentWriteRepository;
 		private readonly UserManager<AppUser> _userManager;
 		private readonly IHttpContextAccessor _httpContextAccessor;
+		private readonly IAuditLogService _auditLogService;
 
 		public ExpenseService(IExpenseReadRepository expenseReadRepository, IExpenseWriteRepository expenseWriteRepository,
 			UserManager<AppUser> userManager, IExpenseCategoryReadRepository expenseCategoryReadRepository, 
 			IPaymentReadRepository paymentReadRepository, IPaymentWriteRepository paymentWriteRepository,
-			IHttpContextAccessor httpContextAccessor)
+			IHttpContextAccessor httpContextAccessor, IAuditLogService auditLogService)
 		{
 			_expenseReadRepository = expenseReadRepository;
 			_expenseWriteRepository = expenseWriteRepository;
@@ -38,6 +39,7 @@ namespace ExpenseTrackingSystem.Persistence.Services
 			_paymentReadRepository = paymentReadRepository;
 			_paymentWriteRepository = paymentWriteRepository;
 			_httpContextAccessor = httpContextAccessor;
+			_auditLogService = auditLogService;
 		}
 
 		public async Task<Expense> CreateAsync(ExpenseCreateDto expenseCreateDto)
@@ -66,6 +68,7 @@ namespace ExpenseTrackingSystem.Persistence.Services
 
 			await _expenseWriteRepository.AddAsync(expense);
 			await _expenseWriteRepository.SaveChangesAsync();
+			await _auditLogService.LogActionAsync(expense.UserId, "Create", "Expense", expense.Id.ToString());
 
 			return expense;
 		}
@@ -139,6 +142,8 @@ namespace ExpenseTrackingSystem.Persistence.Services
 
 			if (expense.Status == ExpenseStatus.Approved)
 				await CreatePaymentSimulationAsync(existingExpense);
+
+			await _auditLogService.LogActionAsync(expense.UserId, "UpdateStatus", "Expense", expense.Id.ToString());
 
 			return existingExpense;
 		}
