@@ -7,10 +7,12 @@ using ExpenseTrackingSystem.Persistence.Context;
 using ExpenseTrackingSystem.Persistence.Repositories;
 using ExpenseTrackingSystem.Persistence.Repositories.Payment;
 using ExpenseTrackingSystem.Persistence.Services;
+using Humanizer.Configuration;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +25,8 @@ namespace ExpenseTrackingSystem.Persistence
 	{
 		public static void AddPersistenceServices(this IServiceCollection services, IConfiguration configuration)
 		{
+			var redisConnectionString = configuration.GetValue<string>("Redis:ConnectionString");
+
 			services.AddDbContext<AppDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
 			services.AddIdentity<AppUser, AppRole>(options =>
@@ -48,6 +52,8 @@ namespace ExpenseTrackingSystem.Persistence
 			services.AddScoped<IExpenseCategoryWriteRepository, ExpenseCategoryWriteRepository>();
 			services.AddScoped<IPaymentReadRepository, PaymentReadRepository>();
 			services.AddScoped<IPaymentWriteRepository, PaymentWriteRepository>();
+			services.AddSingleton<IConnectionMultiplexer>(sp =>
+			ConnectionMultiplexer.Connect(redisConnectionString));
 		}
 	}
 }
