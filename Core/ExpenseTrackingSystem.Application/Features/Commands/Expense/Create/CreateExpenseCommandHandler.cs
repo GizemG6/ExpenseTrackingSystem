@@ -34,8 +34,8 @@ namespace ExpenseTrackingSystem.Application.Features.Commands.Expense.Create
 
 			return new CreateExpenseCommandResponse
 			{
-				Success = result != null,
-				Message = result != null ? "Expense created successfully." : "Failed to create expense."
+				Success = true,
+				Message = "Expense created successfully"
 			};
 		}
 	}

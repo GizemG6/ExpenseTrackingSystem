@@ -1,7 +1,9 @@
 using ExpenseTrackingSystem.API.Middlewares;
 using ExpenseTrackingSystem.Application;
 using ExpenseTrackingSystem.Infrastructure;
+using ExpenseTrackingSystem.Infrastructure.Services;
 using ExpenseTrackingSystem.Persistence;
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -117,6 +119,8 @@ namespace ExpenseTrackingSystem.API
 			app.ConfigureExceptionHandler(app.Services.GetRequiredService<ILogger<Program>>());
 
 			app.UseHttpsRedirection();
+
+			app.UseHangfireDashboard("/hangfire");
 
 			app.UseAuthentication();
 

@@ -72,7 +72,7 @@ namespace ExpenseTrackingSystem.Persistence.Services
 
 				resetToken = resetToken.UrlEncode();
 
-				await _mailService.SendPasswordResetMailAsync(email, user.Id, resetToken);
+				_mailService.SendPasswordResetMailAsync(email, user.Id, resetToken);
 			}
 		}
 

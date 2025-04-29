@@ -153,7 +153,7 @@ namespace ExpenseTrackingSystem.Persistence.Services
 			if (user != null)
 			{
 				string expenseStatus = expense.Status.ToString();
-				await _mailService.SendExpenseStatusUpdateMailAsync(user.Email, expenseStatus, expense.Id.ToString());
+				_mailService.SendExpenseStatusUpdateMailAsync(user.Email, expenseStatus, expense.Id.ToString());
 			}
 
 			await _auditLogService.LogActionAsync(expense.UserId, "UpdateStatus", "Expense", expense.Id.ToString());

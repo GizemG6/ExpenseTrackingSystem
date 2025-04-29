@@ -7,46 +7,67 @@ using System.Text;
 using System.Threading.Tasks;
 using ExpenseTrackingSystem.Application.Abstractions.Services;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using ExpenseTrackingSystem.Infrastructure.Services;
+using ExpenseTrackingSystem.Application.Dtos.Mail;
 
 namespace ExpenseTrackingSystem.Persistence.Services
 {
 	public class MailService : IMailService
 	{
 		private readonly IConfiguration _configuration;
+		private readonly RabbitMqService _rabbitMqService;
 
-		public MailService(IConfiguration configuration)
+		public MailService(IConfiguration configuration, RabbitMqService rabbitMqService)
 		{
 			_configuration = configuration;
+			_rabbitMqService = rabbitMqService;
 		}
 
 		public async Task SendExpenseCreatedMailAsync(string[] adminEmails, string userName, string categoryName, decimal amount, DateTime date, string expenseId)
 		{
 			StringBuilder mailBody = new();
-			mailBody.AppendLine("Merhaba,<br><br>");
-			mailBody.AppendLine($"Yeni bir masrafınız oluşturulmuştur. İşte detaylar:<br><br>");
-			mailBody.AppendLine($"<strong>Masraf ID:</strong> {expenseId}<br>");
-			mailBody.AppendLine($"<strong>Kullanıcı Adı:</strong> {userName}<br>");
-			mailBody.AppendLine($"<strong>Kategori:</strong> {categoryName}<br>");
-			mailBody.AppendLine($"<strong>Tutar:</strong> {amount:C}<br>");
-			mailBody.AppendLine($"<strong>Tarih:</strong> {date:dd/MM/yyyy}<br><br>");
-			mailBody.AppendLine("Masrafınızı sistemde takip edebilirsiniz.<br>");
+			mailBody.AppendLine("Hello,<br><br>");
+			mailBody.AppendLine($"A new expense has been created. Details:<br><br>");
+			mailBody.AppendLine($"<strong>Expense ID:</strong> {expenseId}<br>");
+			mailBody.AppendLine($"<strong>UserName:</strong> {userName}<br>");
+			mailBody.AppendLine($"<strong>Category:</strong> {categoryName}<br>");
+			mailBody.AppendLine($"<strong>Amount:</strong> {amount:C}<br>");
+			mailBody.AppendLine($"<strong>Date:</strong> {date:dd/MM/yyyy}<br><br>");
+			mailBody.AppendLine("You can track your expenses in the system.<br>");
 
-			await SendMailAsync(adminEmails, "Yeni Masraf Oluşturuldu", mailBody.ToString());
+			var mailMessage = new
+			{
+				ToEmails = adminEmails,
+				Subject = "New Expense Created",
+				Body = mailBody.ToString(),
+				IsBodyHtml = true
+			};
+
+			_rabbitMqService.PublishMessage("emailQueue", JsonConvert.SerializeObject(mailMessage));
 		}
 
 		public async Task SendExpenseStatusUpdateMailAsync(string toEmail, string expenseStatus, string expenseId)
 		{
 			StringBuilder mailBody = new();
-			mailBody.AppendLine("Merhaba,<br><br>");
-			mailBody.AppendLine($"Masrafınızın durumu şu şekilde güncellenmiştir:<br><br>");
-			mailBody.AppendLine($"<strong>Masraf ID:</strong> {expenseId}<br>");
-			mailBody.AppendLine($"<strong>Durum:</strong> {expenseStatus}<br><br>");
-			mailBody.AppendLine("Masraf durumu hakkında daha fazla bilgi almak için sistemle iletişime geçebilirsiniz.<br>");
+			mailBody.AppendLine("Hello,<br><br>");
+			mailBody.AppendLine($"The status of your expense has been updated as follows:<br><br>");
+			mailBody.AppendLine($"<strong>Expense ID:</strong> {expenseId}<br>");
+			mailBody.AppendLine($"<strong>Status:</strong> {expenseStatus}<br><br>");
+			mailBody.AppendLine("You can contact the system to get more information about the expense status..<br>");
 
-			await SendMailAsync(new[] { toEmail }, "Masraf Durumu Güncellenmiştir", mailBody.ToString());
+			var mailMessage = new
+			{
+				ToEmails = new[] { toEmail },
+				Subject = "Expense Status Updated",
+				Body = mailBody.ToString(),
+				IsBodyHtml = true
+			};
+
+			_rabbitMqService.PublishMessage("emailQueue", JsonConvert.SerializeObject(mailMessage));
 		}
 
-		public async Task SendMailAsync(string[] tos, string subject, string body, bool isBodyHtml = true)
+		public async Task SendMailAsync(MailRequest mailRequest)
 		{
 			var smtpSettings = _configuration.GetSection("MailSettings");
 			string smtpServer = smtpSettings["SmtpServer"];
@@ -63,16 +84,22 @@ namespace ExpenseTrackingSystem.Persistence.Services
 				using (var message = new MailMessage())
 				{
 					message.From = new MailAddress(senderEmail);
-					message.Subject = subject;
-					message.Body = body;
-					message.IsBodyHtml = isBodyHtml;
+					message.Subject = mailRequest.Subject;
+					message.Body = mailRequest.Body;
+					message.IsBodyHtml = mailRequest.IsBodyHtml;
 
-					foreach (var to in tos)
+					foreach (var to in mailRequest.ToEmails)
 					{
 						message.To.Add(to);
 					}
-
-					await smtpClient.SendMailAsync(message);
+					try
+					{
+						await smtpClient.SendMailAsync(message);
+					}
+					catch (Exception ex)
+					{
+						throw new Exception("An error occurred while sending the email: " + ex.Message);
+					}
 				}
 			}
 		}
@@ -80,13 +107,21 @@ namespace ExpenseTrackingSystem.Persistence.Services
 		public async Task SendPasswordResetMailAsync(string to, string userId, string resetToken)
 		{
 			StringBuilder mailBody = new();
-			mailBody.AppendLine("Merhaba,<br><br>");
-			mailBody.AppendLine("Eğer şifre sıfırlama talebinde bulunduysanız, aşağıdaki bilgileri kullanarak API üzerinden şifrenizi yenileyebilirsiniz:<br><br>");
-			mailBody.AppendLine($"<strong>Kullanıcı ID:</strong> {userId}<br>");
+			mailBody.AppendLine("Hello,<br><br>");
+			mailBody.AppendLine("If you have requested a password reset, you can reset your password via the API using the following information:<br><br>");
+			mailBody.AppendLine($"<strong>User ID:</strong> {userId}<br>");
 			mailBody.AppendLine($"<strong>Reset Token:</strong> {resetToken}<br><br>");
-			mailBody.AppendLine("Bu bilgileri kullanarak `api/auth/reset-password` endpoint'ine bir istek gönderebilirsiniz.<br>");
+			mailBody.AppendLine("Using this information, you can send a request to the `api/Users/update-password` endpoint.<br>");
 
-			await SendMailAsync(new[] { to }, "Şifre Yenileme Talebi", mailBody.ToString());
+			var mailMessage = new
+			{
+				ToEmails = new[] { to },
+				Subject = "Password Renewal Request",
+				Body = mailBody.ToString(),
+				IsBodyHtml = true
+			};
+			
+			_rabbitMqService.PublishMessage("emailQueue", JsonConvert.SerializeObject(mailMessage));
 		}
 	}
 }

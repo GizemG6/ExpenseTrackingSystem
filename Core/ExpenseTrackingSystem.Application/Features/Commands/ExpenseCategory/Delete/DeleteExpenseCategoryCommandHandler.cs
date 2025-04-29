@@ -22,8 +22,8 @@ namespace ExpenseTrackingSystem.Application.Features.Commands.ExpenseCategory.De
 			var category = await _expenseCategoryService.GetByIdAsync(request.Id);
 			return new DeleteExpenseCategoryCommandResponse
 			{
-				Success = category != null,
-				Message = category != null ? "Category deleted successfully." : "Category not found."
+				Success = true,
+				Message = "Category deleted successfully."
 			};
 		}
 	}
