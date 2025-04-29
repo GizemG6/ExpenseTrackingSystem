@@ -4,6 +4,7 @@ using ExpenseTrackingSystem.Application.Repositories;
 using ExpenseTrackingSystem.Application.Repositories.Payment;
 using ExpenseTrackingSystem.Domain.Entities.Identity;
 using ExpenseTrackingSystem.Persistence.Context;
+using ExpenseTrackingSystem.Persistence.Data;
 using ExpenseTrackingSystem.Persistence.Repositories;
 using ExpenseTrackingSystem.Persistence.Repositories.Payment;
 using ExpenseTrackingSystem.Persistence.Services;

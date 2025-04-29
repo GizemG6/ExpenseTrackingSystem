@@ -1,10 +1,13 @@
 using ExpenseTrackingSystem.API.Middlewares;
 using ExpenseTrackingSystem.Application;
+using ExpenseTrackingSystem.Domain.Entities.Identity;
 using ExpenseTrackingSystem.Infrastructure;
 using ExpenseTrackingSystem.Infrastructure.Services;
 using ExpenseTrackingSystem.Persistence;
+using ExpenseTrackingSystem.Persistence.Data;
 using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
