@@ -149,15 +149,15 @@ namespace ExpenseTrackingSystem.Persistence.Migrations
 				values: new object[]
 				{
 		            "d8bc13ce-f943-4eb7-abbc-ee54983a34ff",
-		            "gizememployee",
-		            "GIZEMEMPLOYEE",
-		            "cang8896@gmail.com",
-		            "CANG8896@GMAIL.COM",
+		            "gunesadmin",
+		            "GUNESADMIN",
+		            "admin@example.com",
+		            "ADMIN@EXAMPLE.COM",
 		            true,
-		            "AQAAAAIAAYagAAAAEN09Tis3TTiQCAXnUTDG1YUA/Ik9z0/yl3mDwz6Y6IaExdxhcluTxqJ+BrKKEnyhoA==",
+					"AQAAAAIAAYagAAAAEI0D75GgF9a4UaIhBjBIvEbRWB1IiFYkTTWBA6l1kCRQiw0iVNl4A3qst8Xzl62VmA==",
 					Guid.NewGuid().ToString(),
-					"Gizem Employee",
-		            "Engineer",
+					"Gunes Admin",
+		            "System Admin",
 		            "TR12345123451234512345124",
 		            true,
 		            DateTime.UtcNow,
@@ -310,7 +310,7 @@ namespace ExpenseTrackingSystem.Persistence.Migrations
 				values: new object[]
 				{
 		            "d8bc13ce-f943-4eb7-abbc-ee54983a34ff",
-		            "3ced344b-7076-4dab-a17d-29b3b915c3f5"
+					"558ae86e-ebc1-45d7-8e6c-706405f099b2"
 				});
 
 			migrationBuilder.CreateTable(
