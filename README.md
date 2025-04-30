@@ -177,5 +177,41 @@ ya da Visual Studio veya Rider üzerinden çalıştırabilirsiniz.
 
 Uygulama çalıştığında açılan Swagger sayfası üzerinden API endpointlerini test edebilirsiniz.
 
+## 📁 Katman Yapısı
 
+```mathematica
+ExpenseTrackingSystem/
+├── Core/
+│   ├── ExpenseTrackingSystem.Application/
+│   │   ├── Abstractions/ (Services, Token)
+│   │   ├── Dtos/
+│   │   ├── Features/ (Commands, Queries) Helpers/
+│   │   ├── Helpers/
+│   │   ├── Mapper/
+│   │   ├── Repositories/
+│   │   ├── Validators/
+│   │   └── ServiceRegistration.cs
+│   └── ExpenseTrackingSystem.Domain/ 
+│       └── Entities/
+│
+├── Infrastructure/
+│   ├── ExpenseTrackingSystem.Infrastructure/
+│   │   ├── Services/
+│   │   └── ServiceRegistration.cs
+│   └── ExpenseTrackingSystem.Persistence/
+│       ├── Context/
+│       ├── Migrations/
+│       ├── Repositories/
+│       ├── Services/
+│       └── ServiceRegistration.cs
+│
+├── Presentation/
+│   └── ExpenseTrackingSystem.API/
+│       ├── Controllers/
+│       ├── Middlewares/
+│       ├── appsettings.json
+│       └── Program.cs
+├── Test/ 
+│   └── ExpenseTrackingSystem.Tests/ (xUnit Tests)
+```
 
