@@ -215,3 +215,412 @@ ExpenseTrackingSystem/
 │   └── ExpenseTrackingSystem.Tests/ (xUnit Tests)
 ```
 
+# 🧩 Domain Katmanı
+
+Bu katman, çekirdek nesnelerini barındırır. Veri erişimi, API, UI gibi dış etkenlerden tamamen izole çalışır.
+
+📚Kullanılan Paketler
+
+Microsoft.AspNetCore.Identity.EntityFrameworkCore
+
+## ✳️ Entities
+
+💠 AppUser
+
+Uygulama kullanıcısını temsil eder. Microsoft.AspNetCore.Identity.IdentityUser sınıfından türetilmiştir ve aşağıdaki gibi ek alanlara sahiptir:
+
+| Property                      | Açıklama                                   |
+|-------------------------------|--------------------------------------------|
+| Id                            | Identity-String                            |
+| FullName                      | Kullanıcı ismi                             |
+| Title                         | Şirket içindeki görevi                     |
+| IBAN                          | Kullanıcı IBAN'ı                           |
+| IsActive                      | Kullanıcının aktiflik durumu               |
+| CreatedDate                   | Kullanıcının eklendiği tarih               |
+| UpdateDate	                  | Kullanıcının güncellendiği tarih           |
+| RefreshToken                  | Token yenileme(ek güvenlik)                |
+| RefreshTokenEndDate           | Refresh Token'ının geçerlilik süresinin    |
+| ICollection<Expense> Expenses | Personel için birden fazla masraf ilişkisi |
+
+💠 AppRole
+
+Roller IdentityRole sınıfından türetilmiştir. Kullanıcılara atanabilecek Admin, Employee gibi roller burada tanımlanır.
+
+💠 Expense
+
+Kullanıcılara ait giderleri temsil eder.
+
+| Property                             | Açıklama                                    |
+|--------------------------------------|---------------------------------------------|
+| Id                                   | Guid                                        |
+| Amount                               | Masraf tutarı için                          |
+| Date                                 | Masraf talebinin oluşturulduğu tarihi       |
+| Location                             | Masraf talep yeri                           |
+| RejectionReason                      | Masraf reddedildiyse sebebi                 |
+| ReceiptFilePath	                     | Fatura vb. için dosya yolu                  |
+| UserId, AppUser User                 | Masrafı oluşturan user                      |
+| ExpenseCategory Category, CategoryId | Masraf kategori ilişkisi                    |
+| ExpenseStatus Status                 | Masraf durumu (Pending, Approved, Rejected) |
+
+```csharp
+public enum ExpenseStatus
+{
+	Pending = 1,
+	Approved,
+	Rejected
+}
+```
+
+💠 ExpenseCategory
+
+Harcamaların kategorilerini tutar.
+
+| Property                      | Açıklama                                         |
+|-------------------------------|--------------------------------------------------|
+| Id                            | int                                              |
+| Name                          | Kategori ismi                                    |
+| ICollection<Expense> Expenses | Bir kategoride birden fazla masraf olma ilişkisi |
+
+💠 PaymentSimulation
+
+Adminin ödeme simülasyonlarını içerir.
+
+| Property          | Açıklama           |
+|-------------------|--------------------|
+| Id                | Guid               |
+| PaymentDate       | Ödeme tarihi       |
+| BankReferenceNo   | İşlem numarası     |
+| PaidAmount        | Ödenen tutar       |
+| SenderFullName    | Gönderenin ismi    |
+| SenderIban	      | Gönderenin IBAN'ı  |
+| ReceiverFullName  | Alıcının ismi      |
+| ReceiverIban      | Alıcının IBAN'ı    |
+| Expense Expense   | Masraf bilgisi     |
+
+💠 AuditLog
+
+Uygulama içinde yapılan işlemlerin loglanması için kullanılır.
+
+| Property    | Açıklama                                 |
+|-------------|------------------------------------------|
+| Id          | Guid                                     |
+| UserId      | İşlemi gerçekleştiren kullanıcının Id'si |
+| Action      | Yapılan işlem türü                       |
+| Entity      | İşlem yapılan entity                     |
+| EntityId    | İşlem yapılan entity'nin Id'si           |
+| ActionDate	| İşlemin gerçekleştirildiği tarih         |
+
+# 🧩 Application Katmanı
+
+Application katmanı, iş mantığı ve veri işleme işlemlerini içerir. Domain katmanındaki varlıkları (entity) kullanarak, dışa servisler sağlar ve bu sayede UI (kullanıcı arayüzü) veya API gibi diğer katmanlarla etkileşime girer.
+
+📚Kullanılan Paketler
+
+AutoMapper.Extensions.Microsoft.DependencyInjection
+
+FluentValidation.AspNetCore
+
+FluentValidation.DependencyInjectionExtensions
+
+MediatR
+
+## ✳️ Abstractions
+
+Abstractions altındaki Services ve Token klasörleri içindeki arayüzler, uygulamanın dış dünyaya sağladığı servislerin soyutlamalarıdır.
+
+### Services
+
+Burada iş mantığını gerçekleştiren servis arayüzleri (interface) yer alır.
+
+💠 IAuditLogService
+
+```csharp
+public interface IAuditLogService
+{
+	Task<IEnumerable<AuditLogDto>> GetAuditLogsAsync(string userId = null, DateTime? startDate = null, DateTime? endDate = null);
+	Task LogActionAsync(string userId, string action, string entity, string entityId);
+}
+```
+
+| Method            | Açıklama                                                                                                          |
+|-------------------|-------------------------------------------------------------------------------------------------------------------|
+| GetAuditLogsAsync | Audit Loglarını sorgulamak için                                                                                   |
+| LogActionAsync    | Bir işlem gerçekleştiğinde (örneğin, bir kayıt ekleme) bir AuditLog kaydı oluşturur ve bunu veritabanına kaydeder |
+
+💠 IAuthService
+
+```csharp
+public interface IAuthService
+{
+	Task<bool> VerifyResetTokenAsync(string resetToken, string userId);
+	Task<TokenDto> LoginAsync(string email, string password, int accessTokenLifeTime); 
+	Task<TokenDto> RefreshTokenLoginAsync(string refreshToken);
+	Task PasswordResetAsnyc(string email);
+}
+```
+
+| Method                 | Açıklama                                                                             |
+|------------------------|--------------------------------------------------------------------------------------|
+| VerifyResetTokenAsync  | Şifre sıfırlama işlemi için sağlanan token'ı doğrulamak amacıyla kullanılır          |
+| LoginAsync             | Kullanıcı maili ve şifre ile yapılan giriş işlemini yönetir                          |
+| RefreshTokenLoginAsync | Mevcut bir refresh token ile yeni bir access token'ı almayı sağlar                   |
+| LoginAsync             | Kullanıcıların şifrelerini sıfırlayabilmesi için bir şifre sıfırlama isteği başlatır |
+
+💠 IExpenseCategoryService
+
+```csharp
+public interface IExpenseCategoryService
+{
+	Task<bool> CreateAsync(string name);
+	Task<bool> UpdateAsync(int id, string name);
+	Task<bool> DeleteAsync(int id);
+	Task<ExpenseCategory?> GetByIdAsync(int id);
+	Task<List<ExpenseCategory>> GetAllAsync();
+}
+```
+
+| Method       | Açıklama                     |
+|--------------|------------------------------|
+| CreateAsync  | Kategori oluşturma           |
+| UpdateAsync  | Kategori güncelleme          |
+| DeleteAsync  | Kategori silme               |
+| GetByIdAsync | Id'ye göre kategori getirme  |
+| GetAllAsync  | Bütün kategorileri listeleme |
+
+💠 IExpenseService
+
+```csharp
+public interface IExpenseService
+{
+	Task<List<Expense>> GetAllAsync();
+	Task<Expense> GetByIdAsync(Guid id);
+	Task<Expense> CreateAsync(ExpenseCreateDto expenseCreateDto);
+	Task<Expense> UpdateStatusAsync(Expense expense);
+	Task<bool> DeleteAsync(Guid id);
+	Task<List<Expense>> GetByStatusAsync(ExpenseStatus status);
+	Task<List<Expense>> GetByUserIdAsync(string userId);
+	Task<List<Expense>> GetByFullNameAsync(string fullName);
+	Task<List<Expense>> GetByCategoryAsync(string categoryName);
+}
+```
+
+| Method              | Açıklama                                    |
+|---------------------|---------------------------------------------|
+| GetAllAsync         | Bütün masrafların listelenmesi              |
+| GetByIdAsync        | Id'ye göre masraf bulma                     |
+| CreateAsync         | Masraf oluşturma                            |
+| UpdateStatusAsync   | Masraf durumunu güncelleme                  |
+| DeleteAsync         | Masraf silme                                |
+| GetByStatusAsync    | Masraf durumuna göre masrafları listeleme   |
+| GetByUserIdAsync    | Kullanıcı Id'sine göre masrafları listeleme |
+| GetByFullNameAsync  | Kullanıcı ismine göre masrafları listeleme  |
+| GetByCategoryAsync  | Kategori ismine göre masrafları listeleme   |
+
+💠 IMailService
+
+```csharp
+public interface IMailService
+{
+	Task SendMailAsync(MailRequest mailRequest);
+	Task SendPasswordResetMailAsync(string to, string userId, string resetToken);
+	Task SendExpenseStatusUpdateMailAsync(string toEmail, string expenseStatus, string expenseId);
+	Task SendExpenseCreatedMailAsync(string[] adminEmails, string userName, string categoryName, decimal amount, DateTime date, string expenseId);
+}
+```
+
+| Method                           | Açıklama                                                             |
+|----------------------------------|----------------------------------------------------------------------|
+| SendMailAsync                    | Mail gönderme                                                        |
+| SendPasswordResetMailAsync       | Şifre sıfırlama mail gönderimi                                       |
+| SendExpenseStatusUpdateMailAsync | Admin masraf durumunu güncellediğinde masraf sahibine mail gönderimi |
+| SendExpenseCreatedMailAsync      | Personel masraf oluşturduğunda Adminlere mail gönderimi              |
+
+💠 IReportService
+
+```csharp
+public interface IReportService
+{
+	Task<IEnumerable<EmployeeRequestReportDto>> GetEmployeeRequestsAsync(string userId);
+	Task<IEnumerable<CompanyPaymentDensityReportDto>> GetCompanyPaymentDensityAsync(DateTime startDate, DateTime endDate, string reportType);
+	Task<IEnumerable<EmployeeExpenseDensityReportDto>> GetEmployeeExpenseDensityAsync(DateTime startDate, DateTime endDate, string reportType);
+	Task<IEnumerable<ApprovalStatusReportDto>> GetExpenseApprovalStatusAsync(DateTime startDate, DateTime endDate, string reportType);
+}
+```
+
+| Method                         | Açıklama                                                                             |
+|--------------------------------|--------------------------------------------------------------------------------------|
+| GetEmployeeRequestsAsync       | Personelin kendi işlem hareketlerini raporlama                                       |
+| GetCompanyPaymentDensityAsync  | Şirketin günlük haftalık ve aylık ödeme yoğunluğu raporlama                          |
+| GetEmployeeExpenseDensityAsync | Şirketin personel bazlı günlük haftalık ve aylık harcama yoğunluğunu raporlama       |
+| GetExpenseApprovalStatusAsync  | Şirketin günlük haftalık aylık onaylanan ve red edilen masraf miktarlarını raporlama |
+
+💠 IUserService
+
+```csharp
+public interface IUserService
+{
+    Task<UserCreateResponseDto> CreateAsync(UserCreateDto model);
+    Task<AppUser> GetUserByIdAsync(string userId);
+    Task<List<AppUser>> GetAllUsersAsync();
+    Task UpdatePasswordAsync(string userId, string resetToken, string newPassword);
+    Task<bool> DeleteUserAsync(string userId);
+    Task AssignRoleToUserAsnyc(string userId, string role);
+    Task<List<UserDto>> GetUsersByRoleAsync(string roleName);
+	Task UpdateRefreshTokenAsync(string refreshToken, AppUser user, DateTime accessTokenDate, int addOnAccessTokenDate);
+}
+```
+
+| Method                   | Açıklama                                                                      |
+|--------------------------|-------------------------------------------------------------------------------|
+| CreateAsync              | Kulanıcı oluşturma                                                            |
+| GetUserByIdAsync         | Id'ye göre kullanıcı bulma                                                    |
+| GetAllUsersAsync         | Bütün kullanıcıları listeleme                                                 |
+| UpdatePasswordAsync      | Şifre yenileme                                                                |
+| DeleteUserAsync          | Kullanıcı silme (soft delete)                                                 |
+| AssignRoleToUserAsnyc    | Kullanıcıya rol atama                                                         |
+| GetUsersByRoleAsync      | Role göre kullanıcı bulma                                                     |
+| UpdateRefreshTokenAsync  | Kullanıcıya ait refresh token’ı ve bu token’ın geçerlilik süresini güncelleme |
+
+### Token
+
+💠 ITokenService
+
+```csharp
+public interface ITokenService
+{
+	TokenDto CreateAccessToken(int second, AppUser appUser);
+	string CreateRefreshToken();
+}
+```
+
+| Method              | Açıklama                 |
+|---------------------|--------------------------|
+| CreateAccessToken   | Access Token oluşturma   |
+| CreateRefreshToken  | Refresh Token oluşturma  |
+
+## ✳️ Dtos
+
+➜ Validation, Mapping işlemleri gibi işlemler için AuditLog, Expense, ExpenseCategory, Mail, PaymentSimulation, Report, Token ve User Dto'ları yer alır.
+
+## ✳️ Features
+
+➜ Uygulamadaki her bir işlevi (feature) ayrı bir klasör içinde gruplayarak CQRS (Command Query Responsibility Segregation) ve MediatR mimarisine uygun şekilde yapılandırır.
+
+➜ Command klasöründe veri yazma işlemleri (örneğin kullanıcı ekleme)
+
+➜ Query klasöründe veri okuma işlemleri (örneğin kullanıcı listeleme)
+
+➜ Her biri için ilgili Request, Response ve Handler sınıfları yer alır.
+
+Bu yapı sayesinde kod okunabilirliği artar, işlevler birbirinden ayrılır ve kolay test edilebilir hale gelir.
+
+```mathematica
+├── Commands/
+│   ├── Expense/
+│   │   ├── Create/
+│   │   │   ├── CreateExpenseCommandHandler
+│   │   │   ├── CreateExpenseCommandRequest
+│   │   │   └── CreateExpenseCommandResponse
+│   │   ├── Delete/
+│   │   │   ├── DeleteExpenseCommandResponse
+│   │   │   ├── DeleteExpenseCommandResponse
+│   │   │   └── DeleteExpenseCommandResponse
+│   │   └── UpdateStatus/
+│   │       ├── UpdateExpenseStatusCommandResponse
+│   │       ├── UpdateExpenseStatusCommandResponse
+│   │       └── UpdateExpenseStatusCommandResponse
+│   ├── ExpenseCategory/ 
+│   │   ├── Create/
+│   │   │   ├── CreateExpenseCategoryCommandHandler
+│   │   │   ├── CreateExpenseCategoryCommandRequest
+│   │   │   └── CreateExpenseCategoryCommandResponse
+│   │   ├── Delete/
+│   │   │   ├── DeleteExpenseCategoryCommandResponse
+│   │   │   ├── DeleteExpenseCategoryCommandResponse
+│   │   │   └── DeleteExpenseCategoryCommandResponse
+│   │   └── Update/
+│   │       ├── UpdateExpenseCategoryCommandResponse
+│   │       ├── UpdateExpenseCategoryCommandResponse
+│   │       └── UpdateExpenseCategoryCommandResponse
+│   └── User/ 
+│       ├── AssignRoleToUser/
+│       │   ├── AssignRoleToUserCommandHandler
+│       │   ├── AssignRoleToUserCommandRequest
+│       │   └── AssignRoleToUserCommandResponse
+│       ├── CreateUser/
+│       │   ├── CreateUserCommandHandler
+│       │   ├── CreateUserCommandRequest
+│       │   └── CreateUserCommandResponse
+│       ├── DeleteUser/
+│       │   ├── DeleteUserCommandHandler
+│       │   ├── DeleteUserCommandRequest
+│       │   └── DeleteUserCommandResponse
+│       ├── LoginUser/
+│       │   ├── LoginUserCommandHandler
+│       │   ├── LoginUserCommandRequest
+│       │   └── LoginUserCommandResponse
+│       ├── PasswordReset/
+│       │   ├── PasswordResetCommandHandler
+│       │   ├── PasswordResetCommandRequest
+│       │   └── PasswordResetCommandResponse
+│       ├── RefreshTokenLogin/
+│       │   ├── RefreshTokenLoginCommandHandler
+│       │   ├── RefreshTokenLoginCommandRequest
+│       │   └── RefreshTokenLoginCommandResponse
+│       ├── UpdatePassword/
+│       │   ├── UpdatePasswordCommandHandler
+│       │   ├── UpdatePasswordCommandRequest
+│       │   └── UpdatePasswordCommandResponse
+│       └── VerifyResetToken/
+│           ├── VerifyResetTokenCommandHandler
+│           ├── VerifyResetTokenCommandRequest
+│           └── VerifyResetTokenCommandResponse
+└──  Queries/
+    ├── Expense/
+    │   ├── GetAll/
+    │   │   ├── GetAllExpensesQueryHandler
+    │   │   ├── GetAllExpensesQueryRequest
+    │   │   └── GetAllExpensesQueryResponse
+    │   ├── GetByCategoryName/
+    │   │   ├── GetExpensesByCategoryNameQueryHandler
+    │   │   ├── GetExpensesByCategoryNameQueryRequest
+    │   │   └── GetExpensesByCategoryNameQueryResponse
+    │   ├── GetByFullName/
+    │   │   ├── GetExpensesByFullNameQueryHandler
+    │   │   ├── GetExpensesByFullNameQueryRequest
+    │   │   └── GetExpensesByFullNameQueryResponse
+    │   ├── GetById/
+    │   │   ├── GetExpenseByIdQueryHandler
+    │   │   ├── GetExpenseByIdQueryRequest
+    │   │   └── GetExpenseByIdQueryResponse
+    │   ├── GetByStatus/
+    │   │   ├── GetExpensesByStatusQueryHandler
+    │   │   ├── GetExpensesByStatusQueryRequest
+    │   │   └── GetExpensesByStatusQueryResponse
+    │   └── GetByUserId/
+    │       ├── GetExpensesByUserIdQueryHandler
+    │       ├── GetExpensesByUserIdQueryRequest
+    │       └── GetExpensesByUserIdQueryResponse
+    ├── ExpenseCategory/
+    │   ├── GetAll/
+    │   │   ├── GetAllExpensesCategoriesQueryHandler
+    │   │   ├── GetAllExpensesCategoriesQueryRequest
+    │   │   └── GetAllExpensesCategoriesQueryResponse
+    │   └── GetById/
+    │       ├── GetExpensesCategoryByIdQueryHandler
+    │       ├── GetExpensesCategoryByIdQueryRequest
+    │       └── GetExpensesCategoryByIdQueryResponse
+    └── User/ 
+        ├── GetAllUsers/
+        │   ├── GetAllUsersQueryHandler
+        │   ├── GetAllUsersQueryRequest
+        │   └── GetAllUsersQueryResponse
+        ├── GetUserById/
+        │   ├── GetUserByIdQueryHandler
+        │   ├── GetUserByIdQueryRequest
+        │   └── GetUserByIdQueryResponse
+        └── GetUsersByRole/
+            ├── GetUsersByRoleQueryHandler
+            ├── GetUsersByRoleQueryRequest
+            └── GetUsersByRoleQueryResponse
+```
