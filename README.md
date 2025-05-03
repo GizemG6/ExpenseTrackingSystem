@@ -1706,4 +1706,5 @@ This test class is written to test whether the CreateAsync method in UserService
 # 🎯 API Endpoints
 
 ## 🟠 Postman
-[Postman] (https://documenter.getpostman.com/view/29631051/2sB2j689Yc)
+
+[Postman](https://documenter.getpostman.com/view/29631051/2sB2j689Yc)
