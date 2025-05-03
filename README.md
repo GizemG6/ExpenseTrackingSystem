@@ -1703,3 +1703,7 @@ This test class ensures that the MailService component correctly sends email not
 
 This test class is written to test whether the CreateAsync method in UserService behaves correctly during the user creation process, either succeeding or failing as expected.
 
+# 🎯 API Endpoints
+
+## 🟠 Postman
+[Postman] (https://documenter.getpostman.com/view/29631051/2sB2j689Yc)
