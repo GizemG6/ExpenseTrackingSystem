@@ -15,7 +15,7 @@ Sahada çalışan personel masraflarını anında sisteme girebilecek ve işvere
 | MediatR              | CQRS ve handler yapısı              |
 | FluentValidation     | Model doğrulama işlemleri           |
 | Identity             | Kullanıcı kimlik yönetimi           |
-| JWT	                 | JSON Web Token ile kimlik doğrulama |
+| JWT	               | JSON Web Token ile kimlik doğrulama |
 | Redis                | Önbellekleme ve token yönetimi      |
 | RabbitMQ             | Mesaj kuyruğu ve asenkron işlemler  |
 | Serilog              | Loglama                             |
@@ -23,15 +23,15 @@ Sahada çalışan personel masraflarını anında sisteme girebilecek ve işvere
 | Dapper               | Performans odaklı mikro ORM         |
 | SQL Server           | Veritabanı                          |
 | xUnit	               | Unit test framework                 |
-| FluentAssertions	   | Daha okunabilir test doğrulama      |
-| Moq	                 | Mocklama                            |
-| Swagger	             | API dökümantasyonu ve test aracı    |
+| FluentAssertions     | Daha okunabilir test doğrulama      |
+| Moq	               | Mocklama                            |
+| Swagger	       | API dökümantasyonu ve test aracı    |
 
 ## 🛠️ Kullanılan Mimari ve Design Pattern
 
-| Mimari	             | Design Pattern                       |
+| Mimari	       | Design Pattern                       |
 |----------------------|--------------------------------------|
-| Onion Architecture 	 | Service ve Repository Design Pattern |
+| Onion Architecture   | Service ve Repository Design Pattern |
 
 📌Onion Architecture daha detaylı bilgi için:
 
@@ -62,7 +62,7 @@ cd ExpenseTrackingSystem
 
 Presentation/ExpenseTrackingSystem.API/appsettings.json içindeki bağlantı ve servis bilgilerini kendinize göre güncelleyin.
 
-![image](https://github.com/user-attachments/assets/52c83ac9-8da6-475d-88d1-34c44ac597fb)
+![Ekran görüntüsü 2025-05-03 172821](https://github.com/user-attachments/assets/e71a114c-53a0-441e-beff-860b39bce550)
 
 🔗 ConnectionStrings
 
