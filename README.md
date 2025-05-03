@@ -1,66 +1,76 @@
 # ExpenseTrackingSystem 
 
-Bu proje, şirket özelinde sahada çalışan personel için masraf kalemlerinin takibi ve yönetimi için oluşturulmuştur. Kullanıcıların masraflarını kategori bazlı takip edebildiği, rollerin ayrıldığı ve güvenli bir API altyapısı sunan bir masraf takip sistemidir. Onion Architecture kullanılarak katmanlı ve sürdürülebilir bir yapı kurulmuştur.
+📝 Description
+This project is designed specifically for companies to track and manage expense items of field employees. It is an expense tracking system where users can monitor their expenses based on categories, roles are clearly separated, and a secure API infrastructure is provided. A layered and maintainable architecture has been established using Onion Architecture.
 
-🔎 Proje Detayları
+🔎 Project Details
+Field employees can instantly enter their expenses into the system, and employers can monitor and approve these expenses without delay, allowing immediate reimbursement. Employees will no longer need to collect physical receipts and documents, and even during long periods in the field, they will receive timely payments.
 
-Sahada çalışan personel masraflarını anında sisteme girebilecek ve işveren bunu aynı zamanda hem takip edip edebilecek hem de vakit kaybetmeden harcamayı onaylayıp personele ödemesini yapabilecektir. Çalışan hem evrak fiş vb toplamaktan kurtulmuş olacak hem de uzun süre sahada olduğu durumda gecikmeden ödemesini alabilecektir. Uygulama şirket üzerinde yönetici ve saha personeli olmak üzere 2 farklı rolde(Admin, Employee) hizmet verecektir. Çalışan saha personeli sadece sisteme masraf girişi yapacak ve geri ödeme talep edecektir. Personel mevcut taleplerini görecek ve taleplerinin durumunu takip edebilecektir. Onayda bekleyen taleplerini görebilir ve bunları takip edebilir. Sistem yöneticisi konumunda olan şirket kullanıcıları ise mevcut talepleri görecek ve onları onaylayıp red edebilecektir. Onayladıkları ödemeler için anında ödeme işlemi banka entegrasyonu ile gerçekleştirilecek olup çalışan hesabına EFT ile ilgili tutar yatırılacaktır. Red olan talepler için bir açıklama alanı girişi mevcut ve talep sahibi masraf talebinin neden red olduğunu görebilir.
+The application serves two roles within the company: Admin and Employee.
 
-## 🛠️ Kullanılan Teknolojiler
+Field employees can only submit expense entries and request reimbursements.
 
-| Teknoloji            | Açıklama                            |
-|----------------------|-------------------------------------|
-| .NET 8               | Framework                           |
-| EntityFramework Core | Code First veri erişim              |
-| MediatR              | CQRS ve handler yapısı              |
-| FluentValidation     | Model doğrulama işlemleri           |
-| Identity             | Kullanıcı kimlik yönetimi           |
-| JWT	               | JSON Web Token ile kimlik doğrulama |
-| Redis                | Önbellekleme ve token yönetimi      |
-| RabbitMQ             | Mesaj kuyruğu ve asenkron işlemler  |
-| Serilog              | Loglama                             |
-| Hangfire             | Arka plan görevleri                 |
-| Dapper               | Performans odaklı mikro ORM         |
-| SQL Server           | Veritabanı                          |
-| xUnit	               | Unit test framework                 |
-| FluentAssertions     | Daha okunabilir test doğrulama      |
-| Moq	               | Mocklama                            |
-| Swagger	       | API dökümantasyonu ve test aracı    |
+They can view their existing requests and track their status, including those pending approval.
 
-## 🛠️ Kullanılan Mimari ve Design Pattern
+Company users with admin privileges can view, approve, or reject these requests.
 
-| Mimari	       | Design Pattern                       |
-|----------------------|--------------------------------------|
-| Onion Architecture   | Service ve Repository Design Pattern |
+For approved requests, instant payments are processed via bank integration, and the related amount is transferred to the employee's account via EFT. For rejected requests, a comment field is available to provide a reason, which the employee can see to understand why their expense was denied.
 
-📌Onion Architecture daha detaylı bilgi için:
+## 🛠️ Technologies Used
 
-https://medium.com/@0.gizemgunes/onion-architecture-nedir-ve-yazılımda-nasıl-kullanılır-c77a4a8cf18f
+| Teknoloji            | Açıklama                                  |
+|----------------------|-------------------------------------------|
+| .NET 8               | Framework                                 |
+| EntityFramework Core | Code First data access                    |
+| MediatR              | CQRS and handler structure                |
+| FluentValidation     | Model validation                          |
+| Identity             | User identity management                  |
+| JWT	               | Authentication using JSON Web Tokens      |
+| Redis                | Caching                                   |
+| RabbitMQ             | Message queue and asynchronous operations |
+| Serilog              | Logging                                   |
+| Hangfire             | Background job processing                 |
+| Dapper               | Performance-focused micro ORM             |
+| SQL Server           | Database                                  |
+| xUnit	               | Unit testing framework                    |
+| FluentAssertions     | More readable test assertions             |
+| Moq	               | Mocking library                           |
+| Swagger	       | API documentation and testing tool        |
 
-## ⚙️ Gereksinimler (Prerequisites):
+## 🛠️ Architecture and Design Patterns Used
+
+| Architecture	       | Design Pattern                        |
+|----------------------|---------------------------------------|
+| Onion Architecture   | Service and Repository Design Pattern |
+
+📌  For more detailed information about Onion Architecture:
+
+[Onion Architecture](https://medium.com/@0.gizemgunes/onion-architecture-nedir-ve-yaz%C4%B1l%C4%B1mda-nas%C4%B1l-kullan%C4%B1l%C4%B1r-c77a4a8cf18f)
+
+## ⚙️ Requirements (Prerequisites):
 
 ✅ .NET 8 SDK
 
-✅ Docker Desktop (RabbitMQ, SQL Server gibi servislerin konteyner ile çalıştırılması için)
+✅ Docker Desktop (to run services like RabbitMQ and Redis in containers)
 
-✅ SQL Server 2022 Developer Edition veya Docker üzerinden SQL Server konteyneri
+✅ SQL Server 2022 Developer Edition or a SQL Server container via Docker
 
-✅ Visual Studio 2022+ veya Rider
+✅ Visual Studio 2022+ or Rider
 
-## 🛠️ Kurulum
+## 🛠️ Installation
 
-Projeyi çalıştırmak için aşağıdaki adımları izleyin:
+Follow the steps below to run the project:
 
-### 1️⃣ Projeyi klonlayın:
+### 1️⃣ Clone the project:
 
 ```bash
 git clone https://github.com/GizemG6/ExpenseTrackingSystem.git
 cd ExpenseTrackingSystem
 ```
 
-### 2️⃣ appsettings.json dosyasını yapılandırın:
+### 2️⃣ Configure the appsettings.json file:
 
-Presentation/ExpenseTrackingSystem.API/appsettings.json içindeki bağlantı ve servis bilgilerini kendinize göre güncelleyin.
+Update the connection strings and service configurations in Presentation/ExpenseTrackingSystem.API/appsettings.json according to your environment.
 
 ![Ekran görüntüsü 2025-05-03 172821](https://github.com/user-attachments/assets/e71a114c-53a0-441e-beff-860b39bce550)
 
@@ -72,13 +82,13 @@ Presentation/ExpenseTrackingSystem.API/appsettings.json içindeki bağlantı ve 
 }
 ```
 
-➜ Server alanını kendi SQL Server instance'ınıza göre değiştirin (örneğin: DESKTOP-XXXX\\SQLEXPRESS).
+➜ Change the Server field to match your SQL Server instance (e.g., DESKTOP-XXXX\SQLEXPRESS).
 
-➜ Diğer alanlar aynı kalabilir.
+➜ The other fields can remain the same.
 
 🔐 Token
 
-➜ JWT için kullanılan bu değerler ilk kurulumda kullanılabilir. Güvenlik ihtiyacınıza göre değiştirebilirsiniz.
+➜ The values used for JWT can be used in the initial setup. You can modify them based on your security requirements.
 
 📧 MailSettings
 
@@ -92,11 +102,11 @@ Presentation/ExpenseTrackingSystem.API/appsettings.json içindeki bağlantı ve 
 }
 ```
 
-➜ Proje için gerçek mail adresi üzerinden uygulama şifresi oluşturuldu. Direkt bu kullanılabilir ya da kendi mailiniz ile uygulama şifresi oluşturarak bu yapılandırmayı değiştirebilirsiniz.
+➜ An application password has been created using a real email address for the project. This can be used directly, or you can create an application password with your own email and modify this configuration accordingly.
 
-➜ SenderEmail ve SenderPassword alanlarını kendi Gmail adresiniz ve uygulama şifreniz ile değiştirerek kullanabilirsiniz.
+➜ You can replace the SenderEmail and SenderPassword fields with your Gmail address and application password.
 
-➜ Gmail üzerinden gönderim yapmak için iki adımlı doğrulama ve uygulama şifresi gereklidir.
+➜ To send emails via Gmail, two-factor authentication and an application password are required.
 
 🧠 Redis
 
@@ -106,13 +116,13 @@ Presentation/ExpenseTrackingSystem.API/appsettings.json içindeki bağlantı ve 
 }
 ```
 
-➜ Redis için Docker kullanabilirsiniz. Örnek komut:
+➜ You can use Docker for Redis. Example command:
 
 ```bash
 docker run -d -p 1453:6379 --name redis redis
 ```
 
-➜ ConnectionString değerini container portuna göre ayarlayın.
+➜ Adjust the ConnectionString value according to the container port.
 
 🐰 RabbitMQ
 
@@ -125,59 +135,59 @@ docker run -d -p 1453:6379 --name redis redis
 }
 ```
 
-➜ RabbitMQ için de Docker kullanılabilir. Örnek komut:
+➜ You can also use Docker for RabbitMQ. Example command:
 
 ```bash
 docker run -d --hostname my-rabbit --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
 ```
 
-➜ Arayüze erişim: http://localhost:15672 (Kullanıcı adı/şifre: guest/guest)
+➜ Access the interface at: http://localhost:15672 (Username/Password: guest/guest)
 
-➜ Host, Port, Username, Password değerlerini kurulumunuza göre güncelleyin.
+➜ Update the Host, Port, Username, and Password values according to your setup.
 
-### 3️⃣ Migration'ı çalıştırarak veritabanını oluşturun:
+### 3️⃣ Run the migration to create the database:
 
-➜ .NET CLI Üzerinden
+➜ Through .NET CLI
 
 ```bash
 dotnet ef database update --startup-project Persistence/ExpenseTrackingSystem.API
 ```
 
-Bu komut, veritabanı tablolarını oluşturur ve InitialMigration dosyasındaki seed verileriyle birlikte kullanıcı ve rol bilgilerini ekler.
+This command will create the database tables and add user and role information along with the seed data from the InitialMigration file.
 
-➜ Visual Studio Üzerinden
+➜ Through Visual Studio
 
 ![image](https://github.com/user-attachments/assets/b678d269-3071-4e02-bcab-79cfca8bb1d5)
 
--Package Manager Console'u açın.
+-- Open the Package Manager Console.
 
--Default Project olarak Infrastructure.Persistence katmanını seçin.
+-- Select the Infrastructure.Persistence layer as the Default Project.
 
 ![image](https://github.com/user-attachments/assets/2ea9c145-42e1-4584-a231-b64380951526)
 
--Startup projenin ExpenseTrackingSystem.API olduğundan emin olun.
+-- Make sure the startup project is ExpenseTrackingSystem.API.
 
--Aşağıdaki komutu çalıştırın:
+-- Run the following command:
 
 ```bash
 update-database
 ```
 
-Bu işlem de aynı şekilde veritabanını ve başlangıç verilerini oluşturur.
+This process will also create the database and initial data in the same way.
 
-### 4️⃣ Uygulamayı başlatın:
+### 4️⃣ Run the application:
 
 ```bash
 dotnet run --project Presentation/ExpenseTrackingSystem.API
 ```
 
-ya da Visual Studio veya Rider üzerinden çalıştırabilirsiniz.
+Alternatively, you can run it through Visual Studio or Rider.
 
-### 5️⃣ Swagger üzerinden test edin:
+### 5️⃣ Test it through Swagger:
 
-Uygulama çalıştığında açılan Swagger sayfası üzerinden API endpointlerini test edebilirsiniz.
+Once the application is running, you can test the API endpoints through the Swagger page that opens.
 
-## 📁 Katman Yapısı
+## 📁 Layer Structure (Onion Architecture)
 
 ```mathematica
 ExpenseTrackingSystem/
@@ -215,11 +225,11 @@ ExpenseTrackingSystem/
 │   └── ExpenseTrackingSystem.Tests/ (xUnit Tests)
 ```
 
-# 🧩 Domain Katmanı
+# 🧩 Domain Layer
 
-Bu katman, çekirdek nesnelerini barındırır. Veri erişimi, API, UI gibi dış etkenlerden tamamen izole çalışır.
+This layer contains the core entities. It operates completely isolated from external factors such as data access, API, and UI.
 
-📚Kullanılan Paketler
+📚 NuGet Packages
 
 Microsoft.AspNetCore.Identity.EntityFrameworkCore
 
@@ -227,40 +237,40 @@ Microsoft.AspNetCore.Identity.EntityFrameworkCore
 
 💠 AppUser
 
-Uygulama kullanıcısını temsil eder. Microsoft.AspNetCore.Identity.IdentityUser sınıfından türetilmiştir ve aşağıdaki gibi ek alanlara sahiptir:
+Represents an application user. It is derived from the Microsoft.AspNetCore.Identity.IdentityUser class and has additional fields as follows:
 
-| Property                      | Açıklama                                   |
-|-------------------------------|--------------------------------------------|
-| Id                            | Identity-String                            |
-| FullName                      | Kullanıcı ismi                             |
-| Title                         | Şirket içindeki görevi                     |
-| IBAN                          | Kullanıcı IBAN'ı                           |
-| IsActive                      | Kullanıcının aktiflik durumu               |
-| CreatedDate                   | Kullanıcının eklendiği tarih               |
-| UpdateDate	                | Kullanıcının güncellendiği tarih           |
-| RefreshToken                  | Token yenileme(ek güvenlik)                |
-| RefreshTokenEndDate           | Refresh Token'ının geçerlilik süresinin    |
-| ICollection<Expense> Expenses | Personel için birden fazla masraf ilişkisi |
+| Property                      | Description                                    |
+|-------------------------------|------------------------------------------------|
+| Id                            | Identity-String                                |
+| FullName                      | User's full name                               |
+| Title                         | Job title within the company                   |
+| IBAN                          | User's IBAN                                    |
+| IsActive                      | User's active status                           |
+| CreatedDate                   | Date the user was added                        |
+| UpdateDate	                | Date the user was updated                      |
+| RefreshToken                  | Token refresh (additional security)            |
+| RefreshTokenEndDate           | Expiry date of the refresh token               |
+| ICollection<Expense> Expenses | One-to-many relationship for employee expenses |
 
 💠 AppRole
 
-Roller IdentityRole sınıfından türetilmiştir. Kullanıcılara atanabilecek Admin, Employee gibi roller burada tanımlanır.
+The roles are derived from the IdentityRole class. Roles such as Admin, Employee, etc., that can be assigned to users are defined here.
 
 💠 Expense
 
-Kullanıcılara ait giderleri temsil eder.
+Represents expenses associated with users.
 
-| Property                             | Açıklama                                    |
-|--------------------------------------|---------------------------------------------|
-| Id                                   | Guid                                        |
-| Amount                               | Masraf tutarı için                          |
-| Date                                 | Masraf talebinin oluşturulduğu tarihi       |
-| Location                             | Masraf talep yeri                           |
-| RejectionReason                      | Masraf reddedildiyse sebebi                 |
-| ReceiptFilePath	               | Fatura vb. için dosya yolu                  |
-| UserId, AppUser User                 | Masrafı oluşturan user                      |
-| ExpenseCategory Category, CategoryId | Masraf kategori ilişkisi                    |
-| ExpenseStatus Status                 | Masraf durumu (Pending, Approved, Rejected) |
+| Property                             | Description                                       |
+|--------------------------------------|---------------------------------------------------|
+| Id                                   | Guid                                              |
+| Amount                               | The amount of the expense                         |
+| Date                                 | The date the expense request was created          |
+| Location                             | The location of the expense request               |
+| RejectionReason                      | Reason for rejection, if the expense was rejected |
+| ReceiptFilePath	               | File path for receipts, etc.                      |
+| UserId, AppUser User                 | The user who created the expense                  |
+| ExpenseCategory Category, CategoryId | Expense category relationship                     |
+| ExpenseStatus Status                 | Expense status (Pending, Approved, Rejected))     |
 
 ```csharp
 public enum ExpenseStatus
