@@ -1,9 +1,11 @@
 # ExpenseTrackingSystem 
 
 📝 Description
+
 This project is designed specifically for companies to track and manage expense items of field employees. It is an expense tracking system where users can monitor their expenses based on categories, roles are clearly separated, and a secure API infrastructure is provided. A layered and maintainable architecture has been established using Onion Architecture.
 
 🔎 Project Details
+
 Field employees can instantly enter their expenses into the system, and employers can monitor and approve these expenses without delay, allowing immediate reimbursement. Employees will no longer need to collect physical receipts and documents, and even during long periods in the field, they will receive timely payments.
 
 The application serves two roles within the company: Admin and Employee.
@@ -270,7 +272,7 @@ Represents expenses associated with users.
 | ReceiptFilePath	               | File path for receipts, etc.                      |
 | UserId, AppUser User                 | The user who created the expense                  |
 | ExpenseCategory Category, CategoryId | Expense category relationship                     |
-| ExpenseStatus Status                 | Expense status (Pending, Approved, Rejected))     |
+| ExpenseStatus Status                 | Expense status (Pending, Approved, Rejected)      |
 
 ```csharp
 public enum ExpenseStatus
@@ -283,48 +285,48 @@ public enum ExpenseStatus
 
 💠 ExpenseCategory
 
-Harcamaların kategorilerini tutar.
+Stores the categories of expenses.
 
-| Property                      | Açıklama                                         |
-|-------------------------------|--------------------------------------------------|
-| Id                            | int                                              |
-| Name                          | Kategori ismi                                    |
-| ICollection<Expense> Expenses | Bir kategoride birden fazla masraf olma ilişkisi |
+| Property                      | Description                                                |
+|-------------------------------|------------------------------------------------------------|
+| Id                            | int                                                        |
+| Name                          | Category Name                                              |
+| ICollection<Expense> Expenses | A single category can be associated with multiple expenses |
 
 💠 PaymentSimulation
 
-Adminin ödeme simülasyonlarını içerir.
+Contains payment simulations by the admin.
 
-| Property          | Açıklama           |
-|-------------------|--------------------|
-| Id                | Guid               |
-| PaymentDate       | Ödeme tarihi       |
-| BankReferenceNo   | İşlem numarası     |
-| PaidAmount        | Ödenen tutar       |
-| SenderFullName    | Gönderenin ismi    |
-| SenderIban	    | Gönderenin IBAN'ı  |
-| ReceiverFullName  | Alıcının ismi      |
-| ReceiverIban      | Alıcının IBAN'ı    |
-| Expense Expense   | Masraf bilgisi     |
+| Property          | Description             |
+|-------------------|-------------------------|
+| Id                | Guid                    |
+| PaymentDate       | Payment date            |
+| BankReferenceNo   | Transaction number      |
+| PaidAmount        | Amount paid             |
+| SenderFullName    | Name of the sender      |
+| SenderIban	    | IBAN of the sender      |
+| ReceiverFullName  | Name of the receiver    |
+| ReceiverIban      | IBAN of the receiver    |
+| Expense Expense   | Related expense details |
 
 💠 AuditLog
 
-Uygulama içinde yapılan işlemlerin loglanması için kullanılır.
+Used for logging actions performed within the application.
 
-| Property    | Açıklama                                 |
-|-------------|------------------------------------------|
-| Id          | Guid                                     |
-| UserId      | İşlemi gerçekleştiren kullanıcının Id'si |
-| Action      | Yapılan işlem türü                       |
-| Entity      | İşlem yapılan entity                     |
-| EntityId    | İşlem yapılan entity'nin Id'si           |
-| ActionDate  | İşlemin gerçekleştirildiği tarih         |
+| Property    | Description                                |
+|-------------|--------------------------------------------|
+| Id          | Guid                                       |
+| UserId      | ID of the user who performed the action    |
+| Action      | Type of action performed                   |
+| Entity      | Entity on which the action was performed   |
+| EntityId    | ID of the entity on which action was taken |
+| ActionDate  | Date and time of the action                |
 
-# 🧩 Application Katmanı
+# 🧩 Application Layer
 
-Application katmanı, iş mantığı ve veri işleme işlemlerini içerir. Domain katmanındaki varlıkları (entity) kullanarak, dışa servisler sağlar ve bu sayede UI (kullanıcı arayüzü) veya API gibi diğer katmanlarla etkileşime girer.
+The Application layer contains business logic and data processing operations. It utilizes the entities from the Domain layer to provide services externally, enabling interaction with other layers such as the UI or API.
 
-📚Kullanılan Paketler
+📚 NuGet Packages
 
 AutoMapper.Extensions.Microsoft.DependencyInjection
 
@@ -336,11 +338,11 @@ MediatR
 
 ## ✳️ Abstractions
 
-Abstractions altındaki Services ve Token klasörleri içindeki arayüzler, uygulamanın dış dünyaya sağladığı servislerin soyutlamalarıdır.
+The interfaces under the Services and Token folders within Abstractions are abstractions of the services provided by the application to the outside world.
 
 ### Services
 
-Burada iş mantığını gerçekleştiren servis arayüzleri (interface) yer alır.
+This is where the service interfaces that implement the business logic are located.
 
 💠 IAuditLogService
 
@@ -352,10 +354,10 @@ public interface IAuditLogService
 }
 ```
 
-| Method            | Açıklama                                                                                                          |
-|-------------------|-------------------------------------------------------------------------------------------------------------------|
-| GetAuditLogsAsync | Audit Loglarını sorgulamak için                                                                                   |
-| LogActionAsync    | Bir işlem gerçekleştiğinde (örneğin, bir kayıt ekleme) bir AuditLog kaydı oluşturur ve bunu veritabanına kaydeder |
+| Method            | Description                                                                                     |
+|-------------------|-------------------------------------------------------------------------------------------------|
+| GetAuditLogsAsync | Retrieves the audit logs from the database                                                      |
+| LogActionAsync    | Creates and saves a new audit log entry when an action is performed (e.g., create a new expense)|
 
 💠 IAuthService
 
@@ -369,12 +371,12 @@ public interface IAuthService
 }
 ```
 
-| Method                 | Açıklama                                                                             |
-|------------------------|--------------------------------------------------------------------------------------|
-| VerifyResetTokenAsync  | Şifre sıfırlama işlemi için sağlanan token'ı doğrulamak amacıyla kullanılır          |
-| LoginAsync             | Kullanıcı maili ve şifre ile yapılan giriş işlemini yönetir                          |
-| RefreshTokenLoginAsync | Mevcut bir refresh token ile yeni bir access token'ı almayı sağlar                   |
-| LoginAsync             | Kullanıcıların şifrelerini sıfırlayabilmesi için bir şifre sıfırlama isteği başlatır |
+| Method                 | Description                                                                |
+|------------------------|----------------------------------------------------------------------------|
+| VerifyResetTokenAsync  | Used to validate the token provided for the password reset process         |
+| LoginAsync             | Handles the login process using the user's email and password              |
+| RefreshTokenLoginAsync | Allows obtaining a new access token using an existing refresh token        |
+| LoginAsync             | Initiates a password reset request to allow users to reset their passwords |
 
 💠 IExpenseCategoryService
 
@@ -389,13 +391,13 @@ public interface IExpenseCategoryService
 }
 ```
 
-| Method       | Açıklama                     |
-|--------------|------------------------------|
-| CreateAsync  | Kategori oluşturma           |
-| UpdateAsync  | Kategori güncelleme          |
-| DeleteAsync  | Kategori silme               |
-| GetByIdAsync | Id'ye göre kategori getirme  |
-| GetAllAsync  | Bütün kategorileri listeleme |
+| Method       | Description                     |
+|--------------|---------------------------------|
+| CreateAsync  | Creates a new category          |
+| UpdateAsync  | Updates an existing category    |
+| DeleteAsync  | Deletes a category              |
+| GetByIdAsync | Retrieves a category by its Id  |
+| GetAllAsync  | Lists all categories            |
 
 💠 IExpenseService
 
@@ -414,17 +416,17 @@ public interface IExpenseService
 }
 ```
 
-| Method              | Açıklama                                    |
-|---------------------|---------------------------------------------|
-| GetAllAsync         | Bütün masrafların listelenmesi              |
-| GetByIdAsync        | Id'ye göre masraf bulma                     |
-| CreateAsync         | Masraf oluşturma                            |
-| UpdateStatusAsync   | Masraf durumunu güncelleme                  |
-| DeleteAsync         | Masraf silme                                |
-| GetByStatusAsync    | Masraf durumuna göre masrafları listeleme   |
-| GetByUserIdAsync    | Kullanıcı Id'sine göre masrafları listeleme |
-| GetByFullNameAsync  | Kullanıcı ismine göre masrafları listeleme  |
-| GetByCategoryAsync  | Kategori ismine göre masrafları listeleme   |
+| Method              | Description                           |
+|---------------------|---------------------------------------|
+| GetAllAsync         | Lists all expenses                    |
+| GetByIdAsync        | Gets an expense by its Id             |
+| CreateAsync         | Creates a new expense                 |
+| UpdateStatusAsync   | Updates the status of an expense      |
+| DeleteAsync         | Deletes an expense                    |
+| GetByStatusAsync    | Lists expenses based on their status  |
+| GetByUserIdAsync    | Lists expenses by user Id             |
+| GetByFullNameAsync  | Lists expenses by user's full name    |
+| GetByCategoryAsync  | Lists expenses by category name       |
 
 💠 IMailService
 
@@ -438,12 +440,12 @@ public interface IMailService
 }
 ```
 
-| Method                           | Açıklama                                                             |
-|----------------------------------|----------------------------------------------------------------------|
-| SendMailAsync                    | Mail gönderme                                                        |
-| SendPasswordResetMailAsync       | Şifre sıfırlama mail gönderimi                                       |
-| SendExpenseStatusUpdateMailAsync | Admin masraf durumunu güncellediğinde masraf sahibine mail gönderimi |
-| SendExpenseCreatedMailAsync      | Personel masraf oluşturduğunda Adminlere mail gönderimi              |
+| Method                           | Description                                                                   |
+|----------------------------------|-------------------------------------------------------------------------------|
+| SendMailAsync                    | Sends an email                                                                |
+| SendPasswordResetMailAsync       | Sends a password reset email                                                  |
+| SendExpenseStatusUpdateMailAsync | Sends an email to the expense owner when the admin updates the expense status |
+| SendExpenseCreatedMailAsync      | Sends an email to the admins when a staff member creates an expense           |
 
 💠 IReportService
 
@@ -457,12 +459,12 @@ public interface IReportService
 }
 ```
 
-| Method                         | Açıklama                                                                             |
-|--------------------------------|--------------------------------------------------------------------------------------|
-| GetEmployeeRequestsAsync       | Personelin kendi işlem hareketlerini raporlama                                       |
-| GetCompanyPaymentDensityAsync  | Şirketin günlük haftalık ve aylık ödeme yoğunluğu raporlama                          |
-| GetEmployeeExpenseDensityAsync | Şirketin personel bazlı günlük haftalık ve aylık harcama yoğunluğunu raporlama       |
-| GetExpenseApprovalStatusAsync  | Şirketin günlük haftalık aylık onaylanan ve red edilen masraf miktarlarını raporlama |
+| Method                         | Description                                                                                             |
+|--------------------------------|---------------------------------------------------------------------------------------------------------|
+| GetEmployeeRequestsAsync       | Reports the employee's own transaction activities                                                       |
+| GetCompanyPaymentDensityAsync  | Reports the company's daily, weekly, and monthly payment density                                        |
+| GetEmployeeExpenseDensityAsync | Reports the company's employee-based daily, weekly, and monthly spending density                        |
+| GetExpenseApprovalStatusAsync  | Reports the approved and rejected expense amounts for the company on a daily, weekly, and monthly basis |
 
 💠 IUserService
 
@@ -480,16 +482,16 @@ public interface IUserService
 }
 ```
 
-| Method                   | Açıklama                                                                      |
-|--------------------------|-------------------------------------------------------------------------------|
-| CreateAsync              | Kulanıcı oluşturma                                                            |
-| GetUserByIdAsync         | Id'ye göre kullanıcı bulma                                                    |
-| GetAllUsersAsync         | Bütün kullanıcıları listeleme                                                 |
-| UpdatePasswordAsync      | Şifre yenileme                                                                |
-| DeleteUserAsync          | Kullanıcı silme (soft delete)                                                 |
-| AssignRoleToUserAsnyc    | Kullanıcıya rol atama                                                         |
-| GetUsersByRoleAsync      | Role göre kullanıcı bulma                                                     |
-| UpdateRefreshTokenAsync  | Kullanıcıya ait refresh token’ı ve bu token’ın geçerlilik süresini güncelleme |
+| Method                   | Description                                                |
+|--------------------------|------------------------------------------------------------|
+| CreateAsync              | Create a new user                                          |
+| GetUserByIdAsync         | Get a user by Id                                           |
+| GetAllUsersAsync         | List all users                                             |
+| UpdatePasswordAsync      | Update the user's password                                 |
+| DeleteUserAsync          | Soft delete a user                                         |
+| AssignRoleToUserAsnyc    | Assign a role to a user                                    |
+| GetUsersByRoleAsync      | Get users by their role                                    |
+| UpdateRefreshTokenAsync  | Update the refresh token and its expiration time for a use |
 
 ### Token
 
@@ -503,26 +505,26 @@ public interface ITokenService
 }
 ```
 
-| Method              | Açıklama                 |
+| Method              | Description              |
 |---------------------|--------------------------|
-| CreateAccessToken   | Access Token oluşturma   |
-| CreateRefreshToken  | Refresh Token oluşturma  |
+| CreateAccessToken   | Create an Access Token   |
+| CreateRefreshToken  | Create a Refresh Token   |
 
 ## ✳️ Dtos
 
-➜ Validation, Mapping işlemleri gibi işlemler için AuditLog, Expense, ExpenseCategory, Mail, PaymentSimulation, Report, Token ve User Dto'ları yer alır.
+➜ The application includes Dto's for AuditLog, Expense, ExpenseCategory, Mail, PaymentSimulation, Report, Token, and User to handle operations like validation and mapping.
 
 ## ✳️ Features
 
-➜ Uygulamadaki her bir işlevi (feature) ayrı bir klasör içinde gruplayarak CQRS (Command Query Responsibility Segregation) ve MediatR mimarisine uygun şekilde yapılandırır.
+➜ Each feature in the application is grouped into its own folder and structured according to CQRS (Command Query Responsibility Segregation) and MediatR architecture.
 
-➜ Command klasöründe veri yazma işlemleri (örneğin kullanıcı ekleme)
+➜ The Command folder contains actions that modify data (e.g., create a user).
 
-➜ Query klasöründe veri okuma işlemleri (örneğin kullanıcı listeleme)
+➜ The Query folder handles data retrieval operations (e.g., listing users).
 
-➜ Her biri için ilgili Request, Response ve Handler sınıfları yer alır. Burada Handler içinde Service'ler kullanılmıştır.
+➜ For each operation, there are related Request, Response, and Handler classes. Services are used within the Handlers.
 
-Bu yapı sayesinde kod okunabilirliği artar, işlevler birbirinden ayrılır ve kolay test edilebilir hale gelir.
+This structure enhances code readability, decouples functionalities, and makes testing easier.
 
 ```mathematica
 ├── Commands/
@@ -585,13 +587,13 @@ Bu yapı sayesinde kod okunabilirliği artar, işlevler birbirinden ayrılır ve
             └── GetUsersByRoleQuery(Request, Response, Handler)
 ```
 
-### 🔎 Command ve Query incelemesi
+### 🔎 Command ve Query Review
 
-Kurulan yapıyı anlamak için CreateExpenseCommand ve GetAllExpensesQuery incelemesi
+To understand the structure, let's look at CreateExpenseCommand and GetAllExpensesQuery.
 
 #### CreateExpenseCommand
 
-MediatR kullanarak Masraf oluşturmak için oluşturulmuştur.
+The CreateExpenseCommand is designed to create a new expense record in the system.
 
 ##### CreateExpenseCommandRequest
 
@@ -607,7 +609,7 @@ public class CreateExpenseCommandRequest : IRequest<CreateExpenseCommandResponse
 }
 ```
 
-🔺 MediatR'dan gelen IRequest<> interface kullanılarak Masraf oluşturmak için gerekli olan propertyler eklenmiştir.
+🔺 In the MediatR pattern, the IRequest<T> interface is used to define a request for which a response will be returned. The properties required to create expenses have been added.
 
 ##### CreateExpenseCommandResponse
 
@@ -619,7 +621,7 @@ public class CreateExpenseCommandResponse
 }
 ```
 
-🔺 Masraf oluştuktan sonra Success(masrafın başarılı bir şekilde oluşması) ve Message(başarılı mesajı) propertyleri tutulmuştur.
+🔺 After the expense is created, the properties Success (indicating whether the expense was successfully created) and Message (containing the success message) are stored.
 
 ##### CreateExpenseCommandHandler
 
@@ -656,11 +658,11 @@ public class CreateExpenseCommandHandler : IRequestHandler<CreateExpenseCommandR
 }
 ```
 
-🔺 MediatR'dan gelen IRequestHandler<> interface'i kullanılarak gelen CreateExpenseCommandRequest Handle sınıfında işlenmiş ve geriye CreateExpenseCommandResponse dönmüştür.
+🔺 The IRequestHandler<> interface from MediatR is used, and the incoming CreateExpenseCommandRequest is processed in the Handle class, returning a CreateExpenseCommandResponse.
 
 #### GetAllExpensesQuery
 
-MediatR kullanılarak tüm masrafları almak için oluşturulmuştur.
+It has been created using MediatR to get all expenses.
 
 ##### GetAllExpensesQueryRequest
 
@@ -670,7 +672,7 @@ public class GetAllExpensesQueryRequest : IRequest<List<GetAllExpensesQueryRespo
 }
 ```
 
-🔺 MediatR'dan gelen IRequest interface'i kullanılarak List şekilde response döner.
+🔺 Using the IRequest interface from MediatR, it returns the response in the form of a list.
 
 ##### GetAllExpensesQueryResponse
 
@@ -687,7 +689,7 @@ public class GetAllExpensesQueryResponse
 }
 ```
 
-🔺 Response olarak masraf bilgilerine yer verilmiştir.
+🔺 The response includes the expense details.
 
 ##### GetAllExpensesQueryHandler
 
@@ -718,11 +720,11 @@ public class GetAllExpensesQueryHandler : IRequestHandler<GetAllExpensesQueryReq
 }
 ```
 
-🔺 MediatR'dan gelen IRequestHandler<> interface kullanılarak GetAllExpensesQueryRequest Handler sınıfında işlenmiş ve geriye GetAllExpensesQueryResponse(List) dönmüştür.
+🔺 Using the IRequestHandler<> interface from MediatR, the GetAllExpensesQueryRequest is processed in the handler class, and the response returns a GetAllExpensesQueryResponse (List).
 
 ## ✳️ Helpers
 
-Yardımcı sınıflar burada tutulmuştur.
+Helper classes are stored here.
 
 ### CustomEncoders
 
@@ -742,7 +744,7 @@ public static class CustomEncoders
 }
 ```
 
-🔺CustomEncoders sınıfı, string türüne özel extension method'lar tanımlar. Bu methodlar sayesinde bir string'i Base64 URL formatında şifreleyebilir (encode), şifrelenmiş değeri çözüp (decode) orijinal haline getirebiliriz.
+🔺 The CustomEncoders class defines extension methods specific to the string type. With these methods, you can encode a string into Base64 URL format and decode the encrypted value back to its original form.
 
 ### FileHelper
 
@@ -771,19 +773,19 @@ public class FileHelper
 }
 ```
 
-🔺 Bu sınıf kullanıcıdan alınan bir dosyayı (örneğin bir fatura görseli) sunucuda wwwroot/receipts klasörüne kaydetmek ve dosya yolunu döndürmek için kullanılır.
+🔺 This class is used to save a file (such as an invoice image) received from the user to the wwwroot/receipts folder on the server and return the file path.
 
 ## ✳️ Mapper
 
-Burada AutoMapper kullanılarak MapperConfig sınıfı içinde bütün mapleme işlemleri gerçekleştirilmiştir.
+Here, all mapping operations are performed within the MapperConfig class using AutoMapper.
 
 ## ✳️ Repositories
 
-Repository Design Pattern uygulanarak base IReadRepository ve IWriteRepository oluşturulmuştur. Burada Expense, ExpenseCategory, Payment klasörleri mevcut ve içlerinden IReadRepository ve IWriteRepository interfacelerinin implement edildiği interfaceleri mevcuttur.
+The Repository Design Pattern has been applied, and base IReadRepository and IWriteRepository interfaces have been created. In this structure, there are Expense, ExpenseCategory, and Payment folders, each containing interfaces that implement the IReadRepository and IWriteRepository interfaces.
 
 ### 📚 IReadRepository
 
-Bu interface, bir generic entity için read-only işlemleri tanımlar. 
+This interface defines read-only operations for a generic entity.
 
 ```csharp
 public interface IReadRepository<T, TKey> where T : class
@@ -796,17 +798,17 @@ public interface IReadRepository<T, TKey> where T : class
 }
 ```
 
-| Method          | Açıklama                                                                                                                       |
+| Method          | Description                                                                                                                    |
 |-----------------|--------------------------------------------------------------------------------------------------------------------------------|
-| GetAllAsync     | Veritabanındaki tüm kayıtları getirir. tracking parametresi sayesinde EF Core’un change tracker özelliği açılıp kapatılabilir. |
-| GetWhere        | Belirli bir şarta (predicate) uyan kayıtları getirir.                                                                          |
-| GetSingleAsync  | Belirli bir şarta uyan tek bir nesneyi getirir.                                                                                |
-| GetByIdAsync    | Verilen id'ye sahip nesneyi getirir.                                                                                           |
-| DbSet<T> Table  | EF Core üzerindeki DbSet<T>'e doğrudan erişim sağlar.                                                                          |
+| GetAllAsync     | Retrieves all records from the database. The tracking parameter allows enabling or disabling EF Core's change tracker feature. |
+| GetWhere        | Retrieves records that match a specific condition (predicate)                                                                  |
+| GetSingleAsync  | Retrieves a single entity that matches a specific condition.                                                                   |
+| GetByIdAsync    | Retrieves the entity with the given ID.                                                                                        |
+| DbSet<T> Table  | Provides direct access to the DbSet<T> in EF Core.                                                                             |
 
 ### ✍ IWriteRepository
 
-Bu interface, generic bir entity için yazma (write) işlemlerini tanımlar. 
+This interface defines write operations for a generic entity. 
 
 ```csharp
 public interface IWriteRepository<T, Tkey> where T : class
@@ -820,20 +822,20 @@ public interface IWriteRepository<T, Tkey> where T : class
 }
 ```
 
-| Method           | Açıklama                                                                                                                  |
-|------------------|---------------------------------------------------------------------------------------------------------------------------|
-| AddAsync         | Verilen tek bir entity'yi veritabanına ekler.                                                                             |
-| AddRangeAsync    | Birden fazla entity'yi aynı anda ekler (toplu ekleme işlemi).                                                             |
-| RemoveAsync      | Verilen id'ye sahip entity'yi veritabanından siler.                                                                       |
-| RemoveRangeAsync | Birden fazla id'ye sahip entity'yi topluca siler                                                                          |
-| UpdateAsync      | Verilen entity’yi günceller.                                                                                              |
-| SaveChangesAsync | EF Core’un DbContext.SaveChangesAsync() fonksiyonunu tetikler, yapılan tüm işlemleri veritabanına kalıcı olarak kaydeder. |
+| Method           | Description                                                                                               |
+|------------------|-----------------------------------------------------------------------------------------------------------|
+| AddAsync         | Adds a single entity to the database.                                                                     |
+| AddRangeAsync    | Adds multiple entities at once (bulk insert).                                                             |
+| RemoveAsync      | Deletes the entity with the given ID from the database.                                                   |
+| RemoveRangeAsync | Deletes multiple entities with given IDs in bulk.                                                         |
+| UpdateAsync      | Updates the given entity.                                                                                 |
+| SaveChangesAsync | Triggers EF Core's DbContext.SaveChangesAsync() function, saving all changes to the database permanently. |
 
 ## ✳️ Validators
 
-Burada FluentValidation kullanılarak her entity için validasyon işlemleri gerçekleştirilmiştir.
+Here, validation operations for each entity have been performed using FluentValidation.
 
-Örnek olarak ExpenseValitator:
+For example, the ExpenseValidator:
 
 ```csharp
 public class ExpenseValidator : AbstractValidator<ExpenseCreateDto>
@@ -862,7 +864,7 @@ public class ExpenseValidator : AbstractValidator<ExpenseCreateDto>
 
 ## ✳️ ServiceRegistration.cs
 
-Onion Architecture katmanlı mimari uygulandığı için her katmanın configuration'ları için ServiceRegistration sınıfı oluşturulmuştur. Buradaki amaç Program.cs'i sadeleştirmektir.
+Since Onion Architecture layered architecture is applied, a ServiceRegistration class has been created for the configuration of each layer. The purpose here is to simplify the Program.cs.
 
 ```csharp
 public static class ServiceRegistration
@@ -885,13 +887,13 @@ public static class ServiceRegistration
 }
 ```
 
-🔺 Bu sınıfta FluentValidation, Mapping ve MediatR configuration'ları yapılandırılmıştır.
+🔺  In this class, FluentValidation, Mapping, and MediatR configurations are set up.
 
-# 🧩 Infrastructure/Persistence Katmanı
+# 🧩 Infrastructure/Persistence Layer
 
-Bu katman, bir uygulamanın data access işlemlerinin gerçekleştirildiği bölümdür. Bu katman genellikle Entity Framework, Dapper gibi ORM araçlarıyla çalışır ve uygulamanın veritabanıyla olan bağlantısını yönetir.
+This layer is responsible for data access operations in an application. It typically works with ORM tools like Entity Framework, Dapper, etc., and manages the connection between the application and its database.
 
-📚Kullanılan Paketler
+📚 NuGet Packages
 
 Dapper
 
@@ -907,21 +909,21 @@ StackExchange.Redis
 
 ## ✳️ Context
 
-Veritabanı bağlantısını ve ilişkili tabloları yöneten ana yapıları içerir.
+Contains the main structures that manage the database connection and related tables.
 
 ### ✳️ AppDbContext
 
-Bu sınıf, projenin veritabanı ile olan ilişkisinin tanımlandığı ana sınıftır. IdentityDbContext sınıfından kalıtım alır; bu sayede AppUser ve AppRole ile kimlik yönetimi sağlanır.
+This class is the main class where the relationship with the project's database is defined. It inherits from the IdentityDbContext class, enabling identity management with AppUser and AppRole.
 
 ### ✳️ AppDbContextFactory
 
-Bu sınıf, design-timesenaryoları için kullanılır. EF Core Migrations işlemleri sırasında DbContext nesnesini çalıştırmak amacıyla oluşturulmuştur. Uygulama başlatılmadan önce, appsettings.json içindeki bağlantı bilgilerini okuyarak bir AppDbContext örneği oluşturur. "dotnet ef migrations add" ve "dotnet ef database update" gibi komutlar bu sınıfı kullanarak bağlanacağı veritabanını belirler.
+This class is used for design-time scenarios. It is created to run the DbContext object during EF Core Migrations. Before the application starts, it reads the connection information from appsettings.json and creates an instance of AppDbContext. Commands like "dotnet ef migrations add" and "dotnet ef database update" use this class to determine the database they will connect to.
 
 ## ✳️ Migrations
 
-Burada InitialMigration dosyası yer alır. InitialMigration içinde "update-database" yapıldığında database'e default olarak gelecek 2 admin, 2 rol(Admin ve Employee) ve 3 adet kategori eklenmiştir.
+Here, the InitialMigration file is located. Inside the InitialMigration, when "update-database" is executed, it adds 2 default admins, 2 roles (Admin and Employee), and 3 categories to the database.
 
-Admin Bilgileri
+Admin Information in InitialMigration
 
 | Property         | Admin 1                     | Admin 2                     |
 |------------------|-----------------------------|-----------------------------|
@@ -933,13 +935,13 @@ Admin Bilgileri
 | IBAN             | TR12345123451234512345123   | TR12345123451234512345124   |
 | PhoneNumber      | 5000000000                  | 5000000001                  |
 
-MailService için Admin 1'in mail hesabı olarak gerçek mail hesabı kullanılmıştır. appsettings.json dosyası içinde ayrıca bahsedilecektir. Diğer bilgiler default bilgilerdir.
+For the MailService, the real email account of Admin 1 has been used. This will be further explained in the appsettings.json file. The other information is set to default values.
 
-Kategori olarak 3 adet default kategori eklenmiştir (Yol, Yemek, Konaklama).
+Three default categories have been added as follows: Yol, Yemek, Konaklama
 
 ## ✳️ Repositories
 
-Application katmanı içinde yer alan Repositories klasörü, Dependency Inversion Principle amacıyla interface barındırırken, burada onların concrete implementasyonları mevcuttur.
+The Repositories folder within the Application layer contains interfaces for the purpose of adhering to the Dependency Inversion Principle. The concrete implementations of these interfaces are located here.
 
 ### 📚 ReadRepository
 
@@ -997,7 +999,7 @@ public class ReadRepository<T, TKey> : IReadRepository<T, TKey> where T : class
 }
 ```
 
-AppDbContext kullanılarak IReadRepository implement edilip içleri doldurulmuştur.
+The IReadRepository has been implemented using AppDbContext, and its methods have been populated accordingly.
 
 ### ✍ WriteRepository
 
@@ -1057,11 +1059,11 @@ public class WriteRepository<T, TKey> : IWriteRepository<T, TKey> where T : clas
 }
 ```
 
-AppDbContext kullanılarak IWriteRepository implement edilip içleri doldurulmuştur.
+The IWriteRepository has been implemented using AppDbContext, and its methods have been populated accordingly. 
 
-Aynı işlemler Expense, ExpenseCategory ve Payment için gerçekleştirilmiştir.
+The same operations have been performed for Expense, ExpenseCategory, and Payment entities as well.
 
-Örnek olarak:
+For example:
 
 ### 💲 ExpenseReadRepository
 
@@ -1072,36 +1074,36 @@ public class ExpenseReadRepository : ReadRepository<Expense, Guid>, IExpenseRead
 }
 ```
 
-Bu sınıf, Expense verilerini okuma işlemleri için oluşturulmuş özel bir repository sınıfıdır. ExpenseReadRepository sınıfı, ReadRepository<Expense, Guid> sınıfından kalıtım alır. IExpenseReadRepository arayüzünü uygular. 
+This class is a specialized repository for reading Expense data. The ExpenseReadRepository class inherits from ReadRepository<Expense, Guid> and implements the IExpenseReadRepository interface.
 
 ## ✳️ Services
 
-Burada Application katmanında yer alan interface servislerini implement eden servisler vardır. Dependency Inversion ve Interface Segregation uygulanmıştır. Bağımlılığı azaltmak amaçlanmıştır.
+Here, services that implement interface services from the Application layer are present. Dependency Inversion and Interface Segregation have been applied to reduce dependencies.
 
 ### ⭐ AuditLogService
 
-Bu servis sınıfı içinde Dapper, Logging, Redis(GetAuditLogsAsync cache'te tutma) kullanılmıştır. IAuditLogService implement edilerek GetAuditLogsAsync ve LogActionAsync methotları doldurulmuştur.
+This service class uses Dapper, Logging, and Redis (to store GetAuditLogsAsync in cache). IAuditLogService is implemented, and the GetAuditLogsAsync and LogActionAsync methods are defined.
 
 ### ⭐ AuthService
 
-Burada IConfiguration, UserManager<AppUser>, ITokenService, SignInManager<AppUser>, IUserService, IMailService ve IAuditLogService kullanılarak Authentication işlemleri gerçekleştirilmiştir. IAuthService implement edilmiştir.
+In this service, IConfiguration, UserManager<AppUser>, ITokenService, SignInManager<AppUser>, IUserService, IMailService, and IAuditLogService are used to perform Authentication operations. IAuthService is implemented.
 
-| Method                 | Açıklama                                                                             |
-|------------------------|--------------------------------------------------------------------------------------|
-| VerifyResetTokenAsync  | Şifre sıfırlama işlemi için sağlanan token'ı doğrulamak amacıyla kullanılır          |
-| LoginAsync             | Kullanıcı maili ve şifre ile yapılan giriş işlemini yönetir                          |
-| RefreshTokenLoginAsync | Mevcut bir refresh token ile yeni bir access token'ı almayı sağlar                   |
-| LoginAsync             | Kullanıcıların şifrelerini sıfırlayabilmesi için bir şifre sıfırlama isteği başlatır |
+| Method                 | Description                                                                |
+|------------------------|----------------------------------------------------------------------------|
+| VerifyResetTokenAsync  | Used to validate the token provided for the password reset process         |
+| LoginAsync             | Handles the login process using the user's email and password              |
+| RefreshTokenLoginAsync | Allows obtaining a new access token using an existing refresh token        |
+| LoginAsync             | Initiates a password reset request to allow users to reset their passwords |
 
 ### ⭐ ExpenseCategoryService
 
-IExpenseCategoryService implement edilerek IExpenseCategoryReadRepository, IExpenseCategoryWriteRepository ve IMapper kullanılarak GetByIdAsync, GetAllAsync, CreateAsync, UpdateAsync, DeleteAsync methotları doldurulmuştur.
+This service class implements IExpenseCategoryService, and uses IExpenseCategoryReadRepository, IExpenseCategoryWriteRepository, and IMapper to implement the methods GetByIdAsync, GetAllAsync, CreateAsync, UpdateAsync, and DeleteAsync.
 
 ### ⭐ ExpenseService
 
-Bu servis sınıfı IExpenseService implement ederek masraf ile ilgili işlemleri gerçekleştirir.
+This service class implements IExpenseService and handles operations related to expenses.
 
-#### 🔎 ExpenseService sınıfı içindeki CreateAsync ve UpdateStatusAsync methotların incelenmesi
+#### 🔎 Review of CreateAsync and UpdateStatusAsync Methods in the ExpenseService Class
 
 #### CreateAsync
 
@@ -1153,17 +1155,17 @@ private async Task SendExpenseCreatedMailAsync(AppUser user, ExpenseCategory cat
 	);
 }
 ```
-🔺 Bu methot ExpenseCreateDto kullanarak masraf oluşturup expense döner. Öncelikle expenseCreateDto içinden yer alan UserId'ye göre Identity'den gelen UserManager ile kullanıcıyı tespit eder.
+🔺 This method creates an expense using ExpenseCreateDto and returns an expense. First of all, it detects the user with the UserManager coming from the Identity according to the UserId in the expenseCreateDto.
 
-🔺 2. adım olarak IExpenseCategoryReadRepository'den oluşturulan _expenseCategoryReadRepository(dependency injection ile) içindeki GetByIdAsync methodunu kullanarak Id'ye göre kategori bulur.
+🔺 The second step, find the category by Id using the GetByIdAsync method in the _expenseCategoryReadRepository(with dependency injection) created from IExpenseCategoryReadRepository.
 
-🔺 Daha sonra kullanıcın ekleyeceği fatura dosyası için Application katmanında yer alan FileHelper methodu ile eklenen dosyanın dosya yolunu alır.
+🔺 Next, it retrieves the file path of the invoice uploaded by the user using the FileHelper method from the Application layer.
 
-🔺 Bütün bu işlemlerden sonra oluşan masrafı IExpenseWriteRepository'den oluşturulan _expenseWriteRepository ile veritabanına ekleyip kaydeder.
+🔺 After completing all these steps, the created expense is saved to the database using _expenseWriteRepository from IExpenseWriteRepository.
 
-🔺 IAuditLogService'den oluşturulan _auditLogService ile bu kayıt AuditLog'a kaydedilir.
+🔺 The created record is then logged in the Audit log using _auditLogService from IAuditLogService.
 
-🔺 En son SendExpenseCreatedMailAsync ile oluşan masraf bilgileri Admin'e mail olarak gönderilir.
+🔺 Finally, an email is sent to the Admin with the created expense details via the SendExpenseCreatedMailAsync method.
 
 #### UpdateStatusAsync
 
@@ -1260,27 +1262,29 @@ private async Task<IEnumerable<string>> GetAdminEmailsAsync()
 }
 ```
 
-🔺 Bu methot ilk olarak IExpenseReadRepository içindeki GetByIdAsync ile Id'ye göre masrafı bulur.
+🔺 This method first finds the expense by its Id using GetByIdAsync from IExpenseReadRepository.
 
-🔺 ValidateRejectionReason methodu ile Expense reddedildiğinde (Status = Rejected) mutlaka bir reddetme sebebi (RejectionReason) girilmiş olmasını kontrol eder.
+🔺 The ValidateRejectionReason method checks if a rejection reason (RejectionReason) is provided when the expense is rejected (Status = Rejected).
 
-🔺 UpdateExpenseStatusAsync methodu ile ExpenseStatus güncellenir.
+🔺 The UpdateExpenseStatusAsync method is used to update the status of the expense.
 
-🔺 Eğer masraf onaylandıysa CreatePaymentSimulationAsync methodu ile ödeme gerçekleşir. Bu methot Admin tarafından masrafı oluşturan personele ödeme yapar.
+🔺 If the expense is approved, the CreatePaymentSimulationAsync method simulates the payment process. This method makes a payment to the employee who created the expense, as performed by the Admin.
 
 ### ⭐ ReportService
 
-Bu servis sınıfı IReportService sınıfını implement edip Dapper ve Redis(raporlama yaparken cache'te tutmak için) kullanılmıştır. 
+This service class implements the IReportService interface and utilizes Dapper and Redis (for caching during reporting).
 
 ### ⭐ TokenService
 
-ITokenService sınıfı implement edilerek CreateAccessToken ve CreateRefreshToken methotları doldurulmuştur.
+The ITokenService interface is implemented, and the methods CreateAccessToken and CreateRefreshToken are defined.
 
 ### ⭐ UserService
 
-Bu sınıf IUserService'ini implement eder. AssignRoleToUserAsnyc, CreateAsync, DeleteUserAsync(soft delete), GetAllUsersAsync, GetUserByIdAsync, GetUsersByRoleAsync, UpdatePasswordAsync ve UpdateRefreshTokenAsync methotları doldurulmuştur.
+This class implements the IUserService interface. The following methods are implemented:
 
-İçinde 2 ayrı private oluşturulmuş yardımcı methotlar var.
+AssignRoleToUserAsync, CreateAsync, DeleteUserAsync (soft delete), GetAllUsersAsync, GetUserByIdAsync, GetUsersByRoleAsync, UpdatePasswordAsync and UpdateRefreshTokenAsync.
+
+Additionally, there are two private helper methods created within the class.
 
 ```csharp
 private string GenerateValidUsername(string fullName)
@@ -1305,19 +1309,19 @@ private static class RoleConstants
 }
 ```
 
-🔺 GenerateValidUsername methodu kullanıcı create edilirken UserName'i otomatik oluşturmak amaçlı yapılmıştır.
+🔺 The GenerateValidUsername method is created to automatically generate a UserName when a user is created.
 
-🔺 RoleConstants sistemde kullanılacak rolleri merkezi ve sabit bir şekilde tanımlamak için oluşturulmuş bir static class'tir. 
+🔺 RoleConstants is a static class created to centrally and consistently define the roles used in the system.
 
 ## ✳️ ServiceRegistration.cs
 
-Dependency Injection yoluyla Persistence katmanındaki servis ve bileşenlerin uygulamaya eklenmesini sağlar. Redis connection, DbContext connection, Identity configuration'ları ve tüm service ve repository enjeksiyonları burada yer alır.
+It ensures the injection of services and components from the Persistence layer into the application via Dependency Injection. Redis connection, DbContext connection, Identity configurations, and all service and repository injections are handled here.
 
-# 🧩 Infrastructure/Infrastructure Katmanı
+# 🧩 Infrastructure/Infrastructure Layer
 
-Uygulamanın dış sistemlerle (örneğin e-posta servisi, mesaj kuyruğu sistemi vb.) entegrasyonunu sağlayan altyapı servislerini içerir.
+It contains the infrastructure services that enable the application's integration with external systems (such as email services, message queue systems, etc.).
 
-📚Kullanılan Paketler
+📚 NuGet Package
 
 Hangfire.AspNetCore
 
@@ -1329,35 +1333,35 @@ RabbitMQ.Client
 
 ## ✳️ Services
 
-Burada MailService, RabbitMqService ve RabbitMqBackgroundService service sınıfı yer alır.
+Here, the service classes such as MailService, RabbitMqService, and RabbitMqBackgroundService are present.
 
 ### ✳️ MailService
 
-Bu servis sınıfı IMailService methodunu implement eder, RabbitMqService kullanarak mail işlemleri gerçekleştirir.
+This service class implements the IMailService method and performs email operations using RabbitMqService.
 
 ### ✳️ RabbitMqService
 
-RabbitMQ ile mesaj gönderme (publish) ve dinleme (consume) işlemlerini gerçekleştiren bir servis sınıfıdır. IDisposable interface'ini implement eder. 3 adet methot içerir.
+A service class that handles message sending (publish) and message listening (consume) operations with RabbitMQ. It implements the IDisposable interface and contains three methods.
 
-| Method          | Açıklama                                                                           |
-|-----------------|------------------------------------------------------------------------------------|
-| PublishMessage  | RabbitMQ'da belirtilen kuyruk ismine mesaj gönderir.                               |
-| ListenToQueue   | Belirtilen kuyruğu dinler.                                                         |
-| Dispose         | Uygulama kapanırken veya servis dispose edilirken bağlantılar düzgünce kapatılır.  |
+| Method          | Description                                                                              |
+|-----------------|------------------------------------------------------------------------------------------|
+| PublishMessage  | Sends a message to the specified queue name in RabbitMQ.                                 |
+| ListenToQueue   | Listens to the specified queue.                                                          |
+| Dispose         | Properly closes connections when the application shuts down or the service is disposed.  |
 
 ### ✳️ RabbitMqBackgroundService
 
-Arka planda çalışan bir servis tanımıdır ve RabbitMQ kuyruğunu dinleyip gelen mail isteklerini MailService aracılığıyla göndermek için kullanılır. Bu service sınıfı içinde job'ları arka planda yürütmesi için HangFire kullanılmıştır. İçinde ExecuteAsync methodu yer alır. Bu methot emailQueue adındaki RabbitMQ kuyruğunu dinler. Kuyruğa bir mesaj geldiğinde JSON formatındaki mesaj MailRequest nesnesine deserialize edilir. Gelen mail isteği varsa, Hangfire kütüphanesi kullanılarak mail gönderimi arka planda kuyruklanır.
+This is a background service definition that listens to the RabbitMQ queue and uses the MailService to send email requests. The service class uses HangFire to execute jobs in the background. It contains the ExecuteAsync method, which listens to the emailQueue RabbitMQ queue. When a message is received, it is deserialized from JSON format into a MailRequest object. If there is a mail request, the email sending is queued in the background using the HangFire library.
 
 ## ✳️ ServiceRegistration.cs
 
-Infrastructure katmanındaki servislerin Dependency Injection ile projeye eklenmesini sağlar. Hangfire, RabbitMQ, MailService configuration'ları ve enjeksiyonları burada yer alır.
+This ensures the integration of services in the Infrastructure layer into the project via Dependency Injection. It includes configurations and injections for Hangfire, RabbitMQ, and MailService.
 
-# 🧩 Presentation/API Katmanı
+# 🧩 Presentation/API Layer
 
-Bu katman, client gelen HTTP isteklerini karşılayan API'yi içerir. Uygulamanın dış dünya ile olan iletişim noktasıdır.
+his layer contains the API that handles incoming HTTP requests from the client. It serves as the communication point between the application and the outside world.
 
-📚Kullanılan Paketler
+📚 NuGet Package
 
 Serilog
 
@@ -1369,9 +1373,9 @@ Microsoft.EntityFrameworkCore.Design
 
 ## ✳️ Controllers
 
-API Controller sınıflarını içerir. AuthsController, ExpenseCategoriesController, ExpensesController, ReportController ve UsersController burada yer alır.
+It contains the API Controller classes. The AuthsController, ExpenseCategoriesController, ExpensesController, ReportController, and UsersController are located here.
 
-🔎 Örnek inceleme
+🔎 Controller Review
 
 ### ExpensesController
 
@@ -1455,9 +1459,9 @@ public class ExpensesController : ControllerBase
 }
 ```
 
-🔺 Bu API Controller MediatR kullanarak API endpointlerini oluşturuyor.
+🔺 This API Controller creates API endpoints using MediatR.
 
-🔺 Bazı endpointlere [Authorize(Roles = "Admin")] attribute ile erişim sınırı verilmiştir.
+🔺 Some endpoints are restricted by the [Authorize(Roles = "Admin")] attribute, which limits access to users with the "Admin" role.
 
 ## ✳️ Middlewares
 
@@ -1493,17 +1497,17 @@ public static class ConfigureExceptionHandlerMiddleware
 }
 ```
 
-🔺 Uygulamada özel bir global exception handling mekanizması kurmak için kullanılan bir middleware yapılandırma sınıfıdır.
+🔺 This is a middleware configuration class used to set up a custom global exception handling mechanism in the application.
 
-🔺 Bu method bir hata oluştuğunda yanıtın durum kodunu 500 Internal Server Error olarak ayarlar. Yanıt tipini application/json yapar. 
+🔺 When an error occurs, this method sets the response status code to 500 Internal Server Error and sets the response type to application/json. 
 
-🔺 Oluşan hataya ait detaylara IExceptionHandlerFeature aracılığıyla ulaşılır. Hata mesajı loglanır. Hata bilgileri JSON formatında istemciye döndürülür.
+🔺 Details of the error can be accessed through IExceptionHandlerFeature. The error message is logged, and the error details are returned to the client in JSON format.
 
-🔺 Bu yapı sayesinde kullanıcı dostu bir hata mesajı alınır.
+🔺 This setup provides a user-friendly error message to the client.
 
 ## ✳️ appsettings.json
 
-Burada veritabanı bağlantısı(ConnectionStrings), Token, Mail, Redis ve RabbitMQ temel yapılandırma ayarları yer alır.
+Here, the configuration settings for the database connection (ConnectionStrings), Token, Mail, Redis, and RabbitMQ are defined.
 
 ### ✳️ ConnectionStrings
 
@@ -1513,7 +1517,7 @@ Burada veritabanı bağlantısı(ConnectionStrings), Token, Mail, Redis ve Rabbi
 }
 ```
 
-🔺 Gerekli ConnectionStrings yapılır. Kurulum kısmında bahsedilmiştir.
+🔺 The necessary ConnectionStrings are configured. The setup details are mentioned in the installation section.
 
 ### ✳️ MailSettings
 
@@ -1527,7 +1531,7 @@ Burada veritabanı bağlantısı(ConnectionStrings), Token, Mail, Redis ve Rabbi
 },
 ```
 
-🔺 Uygulama için gerçek bir mail ve uygulama şifresi oluşturulup kullanılmıştır. İsteğe göre yapılandırılabilir.
+🔺 A real email and application password have been created and used for the application. It can be configured as desired.
 
 
 ### ✳️ Redis
@@ -1538,7 +1542,7 @@ Burada veritabanı bağlantısı(ConnectionStrings), Token, Mail, Redis ve Rabbi
 }
 ```
 
-🔺 Redis için gerekli yapılandırma burada yapılır. Kurulum kısmında bahsedilmiştir.
+🔺 The necessary configuration for Redis is done here. It has been mentioned in the installation section.
 
 ### ✳️ RabbitMQ
 
@@ -1551,11 +1555,11 @@ Burada veritabanı bağlantısı(ConnectionStrings), Token, Mail, Redis ve Rabbi
 }
 ```
 
-🔺 RabbitMQ için gerekli yapılandırma burada yapılır. Kurulum kısmında bahsedilmiştir.
+🔺 The necessary configuration for RabbitMQ is done here. It is mentioned in the installation section.
 
 ## ✳️ Program.cs
 
-Bu dosya, uygulamanın başlangıç noktasıdır ve tüm servislerin, middleware’lerin ve yapılandırmaların ayarlandığı yerdir. 
+This file is the entry point of the application and is where all the services, middleware, and configurations are set up. It ensures that necessary services and configurations are injected into the application during startup.
 
 ### 🧰 Services
 
@@ -1565,7 +1569,7 @@ builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddInfrastructureServices(builder.Configuration);
 ```
 
-🔺 Uygulamanın katmanlı mimarideki servislerini (Application, Persistence, Infrastructure) DI (Dependency Injection) sistemine ekler.
+🔺 In a layered architecture, services from different layers (Application, Persistence, Infrastructure) are added to the Dependency Injection (DI) system to ensure proper separation of concerns and maintainability. 
 
 ### 📜 Serilog Loglama Yapılandırması
 
@@ -1585,7 +1589,7 @@ Logger log = new LoggerConfiguration()
 builder.Host.UseSerilog(log);
 ```
 
-🔺 Serilog ile loglar: console'a, dosyaya (logs/log.txt), SQL Server veritabanına yazılır. SQL’de loglar için Logs adında bir tablo otomatik oluşturulur.
+🔺 With Serilog, logs are written to the console, to a file (logs/log.txt), and to the SQL Server database. A table named Logs is automatically created for logs in SQL.
 
 ### 📘 Swagger (API Dokümantasyonu)
 
@@ -1623,7 +1627,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 ```
 
-🔺 Swagger ile uygulamanın tüm API endpointleri otomatik olarak belgelenir. JWT authentication için Swagger arayüzünde token girme imkanı tanınır.
+🔺 With Swagger, all API endpoints of the application are automatically documented. For JWT authentication, the Swagger interface allows you to enter tokens.
 
 ### 🔐 JWT Authentication Ayarları
 
@@ -1655,11 +1659,11 @@ builder.Services.AddAuthentication(options =>
 	});
 ```
 
-🔺 Uygulama JWT token kullanarak güvenliği sağlar. 
+🔺 The application ensures security using JWT (JSON Web Tokens). 
 
-🔺 Token:Audience, Token:Issuer, Token:SecurityKey gibi değerler appsettings.json üzerinden alınır. 
+🔺 Values such as Token:Audience, Token:Issuer, and Token:SecurityKey are retrieved from the appsettings.json file.
 
-🔺 Token’ın geçerliliği (süre, imza, hedef kullanıcı) kontrol edilir.
+🔺 The validity of the token (such as expiration time, signature, and intended user) is verified.
 
 ### ⚙️ Middleware ve Uygulama Çalıştırma
 
@@ -1673,29 +1677,29 @@ app.MapControllers();
 app.Run();
 ```
 
-🔺 Hata yönetimi özel bir middleware ile yapılandırılır.
+🔺 Error handling is configured through a custom middleware.
 
-🔺 Hangfire arayüzü /hangfire yolu üzerinden erişilebilir olur.
+🔺 The Hangfire interface is accessible via the /hangfire route.
 
-🔺 Authentication ve Authorization işlemleri sırayla uygulanır.
+🔺 Authentication and Authorization are applied sequentially.
 
 # 🧩 Test 
 
-Bu projede, iş katmanlarının doğruluğunu kontrol etmek için xUnit test framework’ü kullanılmaktadır. Testler Test isimli ayrı bir katmanda yer alır ve birim testler ile servislerin beklenen davranışları test edilir.
+In this project, the xUnit test framework is used to verify the correctness of business layers. Tests are located in a separate "Test" layer, and unit tests check the expected behavior of services.
 
 ## ✳️ AuthServiceTests
 
-Kullanıcı adı ve şifresi doğru girildiğinde AuthService.LoginAsync metodunun geçerli bir JWT access token ve refresh token döndürmesini test eder.
+This test class ensures that when a valid username and password are provided, the AuthService.LoginAsync method returns a valid JWT access token and refresh token.
 
 ## ✳️ ExpenseServiceTests
 
-Bu test sınıfı, masraf (expense) oluşturma işleminin ExpenseService üzerinden doğru şekilde gerçekleşip gerçekleşmediğini test eder.
+This test class checks if the expense creation process via the ExpenseService occurs correctly and as expected.
 
 ## ✳️ MailServiceTests
 
-Bu test sınıfı, MailService bileşeninin harcama oluşturulduğunda yöneticilere e-posta bildirimini RabbitMQ kuyruğuna doğru şekilde gönderip göndermediğini test eder.
+This test class ensures that the MailService component correctly sends email notifications to administrators via the RabbitMQ queue when an expense is created.
 
 ## ✳️ UserServiceTests
 
-Bu sınıf, UserService içerisinde yer alan CreateAsync metodunun kullanıcı oluşturma sürecinde başarılı mı yoksa hatalı mı davrandığını test etmek için yazılmıştır.
+This test class is written to test whether the CreateAsync method in UserService behaves correctly during the user creation process, either succeeding or failing as expected.
 
