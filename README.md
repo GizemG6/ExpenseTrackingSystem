@@ -1705,23 +1705,23 @@ This test class is written to test whether the CreateAsync method in UserService
 
 # 🎯 API Endpoints
 
-## 🟢 Swagger
+## ✳️ Swagger
 
 ### 🤖 Auths
 
-#### POST api/Auths/Login
+#### 🟢 POST api/Auths/Login
 
 This endpoint logs the user in with email and password and generates a token. This token will be used in many endpoints for the admin. Please make sure that you enter the user email and password that exist in the database.
 
-#### POST api/Auths/RefreshTokenLogin
+#### 🟢 POST api/Auths/RefreshTokenLogin
 
 Allows obtaining a new access token using an existing refresh token. The refresh token created in the AspNetUsers table of the logged in user can be used for testing.
 
-#### POST api/Auths/verify-reset-token
+#### 🟢 POST api/Auths/verify-reset-token
 
 This enpoint resets token provides verification. Please make sure that you have entered the reset token and correct userId received in the mail.
 
-#### POST api/Auths/password-reset
+#### 🟢 POST api/Auths/password-reset
 
 This endpoint sends a Reset Token to the email address you entered, sent by 0.gizemgunes@gmail.com (or another email address if you have set it in appsettings.json). Please make sure that the email settings in the appsettings.json file are correct and that the email address you are requesting is in the database.
 
@@ -1740,71 +1740,71 @@ Enter the jwt token here and authorize:
 
 ### 📚 ExpenseCategories
 
-#### GET api/ExpenseCategories
+#### 🔵 GET api/ExpenseCategories
 
 This endpoint gets all categories. Please make sure to enter the Admin token.
 
-#### POST api/ExpenseCategories
+#### 🟢 POST api/ExpenseCategories
 
 This endpoint creates a category. Only admins can create categories. Please make sure to enter the Admin token.
 
-#### PUT api/ExpenseCategories
+#### 🟠 PUT api/ExpenseCategories
 
 This endpoint updates the category. Only admins can update the category. Please make sure to enter the Admin token and make sure the category exists in the database.
 
-#### GET api/ExpenseCategories/{Id}
+#### 🔵 GET api/ExpenseCategories/{Id}
 
 This endpoint gets category by id. Please make sure to enter the Admin token.
 
-#### DELETE api/ExpenseCategories/{Id}
+#### 🔴 DELETE api/ExpenseCategories/{Id}
 
 This endpoint deletes a category based on its id. Please make sure to enter the Admin token and make sure the category exists in the database.
 
 ### 💵 Expenses
 
-#### GET api/Expenses
+#### 🔵 GET api/Expenses
 
 This endpoint gets all expenses. Please make sure to enter the Admin token.
 
-#### POST api/Expenses
+#### 🟢 POST api/Expenses
 
 This endpoint creates a new expense. Make sure that the UserId and CategoryId exist in the database.
 
-#### PUT api/Expenses
+#### 🟠 PUT api/Expenses
 
 Only admin can update the expense status. So make sure to enter the Admin token. Make sure the Id is the existing ExpenseId. Status must be 2 or 3(Approved, Rejected). If expense is rejected, please make sure to enter rejectionReason.
 
-#### GET api/Expenses/{Id}
+#### 🔵 GET api/Expenses/{Id}
 
 This endpoint returns expense information based on ExpenseId. 
 
-#### GET api/Expenses/by-status
+#### 🔵 GET api/Expenses/by-status
 
 This endpoint gets expenses according to the status. Status can be 1, 2 or 3.
 
-#### GET api/Expenses/by-userId
+#### 🔵 GET api/Expenses/by-userId
 
 This endpoint gets expense information based on UserId. Please make sure that the Id you entered is the UserId that exists in the database.
 
-#### GET api/Expenses/by-full-name
+#### 🔵 GET api/Expenses/by-full-name
 
 This endpoint gets expenses according to the full name.
 
-#### GET api/Expenses/by-category-name
+#### 🔵 GET api/Expenses/by-category-name
 
 This endpoint geta the expenses according to the request category name. Please make sure that the category name you entered exists in the database.
 
-#### DELETE api/Expenses/Id
+#### 🔴 DELETE api/Expenses/Id
 
 This endpoint deletes the Expense according to the entered ExpenseId. Only admin can do this. Please make sure to enter the Admin token and ExpenseId that exists in database.
 
 ### 👩🏻‍💻👨🏻‍💻 Users
 
-#### GET api/Users
+#### 🔵 GET api/Users
 
 This enpoint gets all users. Only admin can do this. Please make sure to enter the Admin token.
 
-#### POST api/Users
+#### 🟢 POST api/Users
 
 This endpoint creates a user. Only admin can do this. Please make sure to enter the Admin token. Password must be at least 4 characters. Required non alphanumeric, digit, lowercase and uppercase.
 
@@ -1815,48 +1815,50 @@ This endpoint creates a user. Only admin can do this. Please make sure to enter 
 3- Phone number can be:
 
 +905000000000
+
 05000000000
+
 5000000000
 
-#### GET api/Users/{Id}
+#### 🔵 GET api/Users/{Id}
 
 This endpoint gets User by Id. Only admin can do this. Please make sure to enter the Admin token.
 
-#### DELETE api/Users/{Id}
+#### 🔴 DELETE api/Users/{Id}
 
 This endpoint deletes User by Id. Make sure that the Id is the UserId that exists in the database. Only admin can do this. Please make sure to enter the Admin token.
 
-#### GET api/Users/role/{RoleName}
+#### 🔵 GET api/Users/role/{RoleName}
 
 This request gets Users by RoleName(Admin or Employee). Only admin can do this. Please make sure to enter the Admin token.
 
-#### POST api/Users/assign-role
+#### 🟢 POST api/Users/assign-role
 
 This endpoint assigns the role of the existing user. Make sure that the Id entered is an existing UserId and the role is Admin or Employee. Only admin can do this. Please make sure to enter the Admin token.
 
-#### POST api/Users/update-password
+#### 🟢 POST api/Users/update-password
 
 This enpoint used for password update. The resetToken created after sending an email to an existing email address with the Auths/password-reset request is used here. Password must be at least 4 characters. Required non alphanumeric, digit, lowercase and uppercase. Make sure that password and passwordConfirm are the same.
 
 ### 📈 Report
 
-#### GET api/Report/personal-requests/{userId}
+#### 🔵 GET api/Report/personal-requests/{userId}
 
 This endpoint reports the employee's own transaction activities.
 
-#### GET api/Report/company-payment-density
+#### 🔵 GET api/Report/company-payment-density
 
 The endpoint reports the company's daily, weekly, and monthly payment density. Set the StartDate and EndDate as desired. ReportType can be daily weekly monthly. Only admin can do this. Please make sure to enter the Admin token.
 
-#### GET api/Report/employee-expense-density
+#### 🔵 GET api/Report/employee-expense-density
 
 The endpoint reports the company's employee-based daily, weekly, and monthly spending density. Set the StartDate and EndDate as desired. ReportType can be daily weekly monthly. Only admin can do this. Please make sure to enter the Admin token.
 
-#### GET api/Report/expense-approval-status
+#### 🔵 GET api/Report/expense-approval-status
 
 The endpoint reports the approved and rejected expense amounts for the company on a daily, weekly, and monthly basis. Set the StartDate and EndDate as desired. ReportType can be daily weekly monthly. Only admin can do this. Please make sure to enter the Admin token.
 
-#### GET api/Report/api/auditlogs
+#### 🔵 GET api/Report/api/auditlogs
 
 The endpoint retrieves the audit logs from the database. Make sure that the UserId is a UserId that exists in the database. Set the StartDate and EndDate as desired.
 
