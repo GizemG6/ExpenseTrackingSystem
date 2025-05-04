@@ -1878,4 +1878,20 @@ The endpoint retrieves the audit logs from the database. Make sure that the User
 
 ## 🟠 Postman
 
+You can access the public Postman documentation of this API using the following link:
+
 [Postman](https://documenter.getpostman.com/view/29631051/2sB2j689Yc)
+
+If you'd like to use this collection in the Postman desktop application, follow these steps:
+
+1- Open the public documentation link above.
+
+2- Click on the "Run in Postman" button at the top right.
+
+3- Choose "Postman Desktop App" when prompted.
+
+4- The collection will be imported into your Postman application.
+
+5- Set up the required environment variables (e.g., base URL, access token) if needed.
+
+6- You're now ready to test the API directly from Postman!
