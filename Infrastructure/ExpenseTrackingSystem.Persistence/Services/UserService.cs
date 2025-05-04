@@ -133,6 +133,28 @@ namespace ExpenseTrackingSystem.Persistence.Services
 				throw new Exception("User not found");
 		}
 
+		public async Task<bool> UpdateUserByTitleAsync(UpdateUserTitleDto model)
+		{
+			var user = await _userManager.FindByIdAsync(model.Id);
+			if (user == null) return false;
+
+			user.Title = model.Title;
+
+			var result = await _userManager.UpdateAsync(user);
+			return result.Succeeded;
+		}
+
+		public async Task<bool> UpdateUserIbanAsync(UpdateUserIbanDto model)
+		{
+			var user = await _userManager.FindByIdAsync(model.Id);
+			if (user == null) return false;
+
+			user.IBAN = model.Iban;
+
+			var result = await _userManager.UpdateAsync(user);
+			return result.Succeeded;
+		}
+
 		private string GenerateValidUsername(string fullName)
 		{
 			var normalized = fullName

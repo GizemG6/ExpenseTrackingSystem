@@ -2,6 +2,8 @@
 using ExpenseTrackingSystem.Application.Features.Commands.User.CreateUser;
 using ExpenseTrackingSystem.Application.Features.Commands.User.DeleteUser;
 using ExpenseTrackingSystem.Application.Features.Commands.User.UpdatePassword;
+using ExpenseTrackingSystem.Application.Features.Commands.User.UpdateUserByIban;
+using ExpenseTrackingSystem.Application.Features.Commands.User.UpdateUserByTitle;
 using ExpenseTrackingSystem.Application.Features.Queries.User.GetAllUsers;
 using ExpenseTrackingSystem.Application.Features.Queries.User.GetUserById;
 using ExpenseTrackingSystem.Application.Features.Queries.User.GetUsersByRole;
@@ -66,6 +68,20 @@ namespace ExpenseTrackingSystem.API.Controllers
 		public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordCommandRequest updatePasswordCommandRequest)
 		{
 			UpdatePasswordCommandResponse response = await _mediator.Send(updatePasswordCommandRequest);
+			return Ok(response);
+		}
+
+		[HttpPut("update-title")]
+		public async Task<IActionResult> UpdateUserTitle(UpdateUserByTitleCommandRequest updateUserByTitleCommandRequest)
+		{
+			UpdateUserByTitleCommandResponse response = await _mediator.Send(updateUserByTitleCommandRequest);
+			return Ok(response);
+		}
+
+		[HttpPut("update-IBAN")]
+		public async Task<IActionResult> UpdateUserIban(UpdateUserByIbanCommandRequest updateUserByIbanCommandRequest)
+		{
+			UpdateUserByIbanCommandResponse response = await _mediator.Send(updateUserByIbanCommandRequest);
 			return Ok(response);
 		}
 

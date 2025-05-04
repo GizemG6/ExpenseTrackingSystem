@@ -18,5 +18,7 @@ namespace ExpenseTrackingSystem.Application.Abstractions.Services
         Task AssignRoleToUserAsnyc(string userId, string role);
         Task<List<UserDto>> GetUsersByRoleAsync(string roleName);
 		Task UpdateRefreshTokenAsync(string refreshToken, AppUser user, DateTime accessTokenDate, int addOnAccessTokenDate);
+		Task<bool> UpdateUserByTitleAsync(UpdateUserTitleDto model);
+        Task<bool> UpdateUserIbanAsync(UpdateUserIbanDto model);
 	}
 }
