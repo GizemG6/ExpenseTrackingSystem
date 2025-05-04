@@ -1836,7 +1836,7 @@ This endpoint deletes User by Id. Make sure that the Id is the UserId that exist
 
 #### 🔵 GET api/Users/role/{RoleName}
 
-This request gets Users by RoleName(Admin or Employee). Only admin can do this. Please make sure to enter the Admin token.
+This endpoint gets Users by RoleName(Admin or Employee). Only admin can do this. Please make sure to enter the Admin token.
 
 #### 🟢 POST api/Users/assign-role
 
@@ -1844,15 +1844,15 @@ This endpoint assigns the role of the existing user. Make sure that the Id enter
 
 #### 🟢 POST api/Users/update-password
 
-This enpoint used for password update. The resetToken created after sending an email to an existing email address with the Auths/password-reset request is used here. Password must be at least 4 characters. Required non alphanumeric, digit, lowercase and uppercase. Make sure that password and passwordConfirm are the same. Only admin can do this. Please make sure to enter the Admin token.
+This endpoint used for password update. The resetToken created after sending an email to an existing email address with the Auths/password-reset request is used here. Password must be at least 4 characters. Required non alphanumeric, digit, lowercase and uppercase. Make sure that password and passwordConfirm are the same. Only admin can do this. Please make sure to enter the Admin token.
 
 #### 🟠 PUT api/Users/update-title
 
-This enpoint used for title update. Only admin can do this. Please make sure to enter the Admin token.
+This endpoint used for title update. Only admin can do this. Please make sure to enter the Admin token.
 
 #### 🟠 PUT api/Users/update-IBAN
 
-This enpoint used for IBAN update. Only admin can do this. Please make sure to enter the Admin token.
+This endpoint used for IBAN update. Only admin can do this. Please make sure to enter the Admin token.
 
 ### 📈 Report
 
