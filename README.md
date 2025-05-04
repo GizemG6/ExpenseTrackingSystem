@@ -1895,3 +1895,60 @@ If you'd like to use this collection in the Postman desktop application, follow 
 5- Set up the required environment variables (e.g., base URL, access token) if needed.
 
 6- You're now ready to test the API directly from Postman!
+
+## 📸 Some Screenshots
+
+### Auths/Login
+
+![Ekran görüntüsü 2025-05-05 000247](https://github.com/user-attachments/assets/405b9add-0b89-4acc-99a9-2489fc885db7)
+
+### POST ExpenseCategories
+
+![Ekran görüntüsü 2025-05-05 000334](https://github.com/user-attachments/assets/0c564b3c-7b97-4f48-b940-e2ec48600bc8)
+
+### GET Expenses
+
+![Ekran görüntüsü 2025-05-05 000345](https://github.com/user-attachments/assets/27fbcee9-e351-4bcc-99af-c3bb4041e9ce)
+
+### POST Expenses
+
+![Ekran görüntüsü 2025-05-05 000445](https://github.com/user-attachments/assets/e00fd940-5fbb-4fc0-ac8b-e397a3dca775)
+
+![Ekran görüntüsü 2025-05-05 000452](https://github.com/user-attachments/assets/be783925-d6fc-428f-9556-0d52a641b086)
+
+### PUT Expenses
+
+![Ekran görüntüsü 2025-05-05 000525](https://github.com/user-attachments/assets/bcf6df29-620b-4d1f-accf-51d849fe1c71)
+
+### GET Expenses/by-status
+
+![Ekran görüntüsü 2025-05-05 000536](https://github.com/user-attachments/assets/0ff42c20-4838-46dd-9602-37bd52e747cc)
+
+### GET Expenses/by-full-name
+
+![Ekran görüntüsü 2025-05-05 000609](https://github.com/user-attachments/assets/d824c1cf-e994-46be-b2ab-b823061ab59d)
+
+### POST Users
+
+To demonstrate validations
+
+![Ekran görüntüsü 2025-05-05 000650](https://github.com/user-attachments/assets/1ea752b2-6a3e-4dab-9a52-b6012c71c90e)
+
+![Ekran görüntüsü 2025-05-05 000656](https://github.com/user-attachments/assets/6765465f-4bef-490f-8ed6-bad5139ef414)
+
+### GET Users/role/{RoleName}
+
+![Ekran görüntüsü 2025-05-05 000723](https://github.com/user-attachments/assets/55293f28-122d-453a-98b7-4f2fe4a23bdc)
+
+### PUT Users/update-title
+
+![Ekran görüntüsü 2025-05-05 000750](https://github.com/user-attachments/assets/eb55bbaf-5604-4e20-8383-89a7204306a8)
+
+### GET Users
+
+![Ekran görüntüsü 2025-05-05 000834](https://github.com/user-attachments/assets/29890af4-d7b5-4b21-88cf-e17f7cb7447e)
+
+### GET Report/api/auditLogs
+
+![Ekran görüntüsü 2025-05-05 000921](https://github.com/user-attachments/assets/385c5f0d-828e-4ffb-b335-532be0368011)
+
