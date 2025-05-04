@@ -492,6 +492,8 @@ public interface IUserService
 | AssignRoleToUserAsnyc    | Assign a role to a user                                    |
 | GetUsersByRoleAsync      | Get users by their role                                    |
 | UpdateRefreshTokenAsync  | Update the refresh token and its expiration time for a use |
+| UpdateUserByTitleAsync   | Update the user's title                                    |
+| UpdateUserIbanAsync      | Update the user's IBAN                                     |
 
 ### Token
 
@@ -557,6 +559,10 @@ This structure enhances code readability, decouples functionalities, and makes t
 │       │   └── RefreshTokenLoginCommand(Request, Response, Handler)
 │       ├── UpdatePassword/
 │       │   └── UpdatePasswordCommand(Request, Response, Handler)
+│       ├── UpdateUserByIban/
+│       │   └── UpdateUserByIbanCommand(Request, Response, Handler)
+│       ├── UpdateUserByTitle/
+│       │   └── UpdateUserByTitleCommand(Request, Response, Handler)
 │       └── VerifyResetToken/
 │           └── VerifyResetTokenCommand(Request, Response, Handler)
 └──  Queries/
@@ -1282,7 +1288,7 @@ The ITokenService interface is implemented, and the methods CreateAccessToken an
 
 This class implements the IUserService interface. The following methods are implemented:
 
-AssignRoleToUserAsync, CreateAsync, DeleteUserAsync (soft delete), GetAllUsersAsync, GetUserByIdAsync, GetUsersByRoleAsync, UpdatePasswordAsync and UpdateRefreshTokenAsync.
+AssignRoleToUserAsync, CreateAsync, DeleteUserAsync (soft delete), GetAllUsersAsync, GetUserByIdAsync, GetUsersByRoleAsync, UpdatePasswordAsync, UpdateUserByTitleAsync, UpdateUserIbanAsync and UpdateRefreshTokenAsync.
 
 Additionally, there are two private helper methods created within the class.
 
@@ -1838,7 +1844,15 @@ This endpoint assigns the role of the existing user. Make sure that the Id enter
 
 #### 🟢 POST api/Users/update-password
 
-This enpoint used for password update. The resetToken created after sending an email to an existing email address with the Auths/password-reset request is used here. Password must be at least 4 characters. Required non alphanumeric, digit, lowercase and uppercase. Make sure that password and passwordConfirm are the same.
+This enpoint used for password update. The resetToken created after sending an email to an existing email address with the Auths/password-reset request is used here. Password must be at least 4 characters. Required non alphanumeric, digit, lowercase and uppercase. Make sure that password and passwordConfirm are the same. Only admin can do this. Please make sure to enter the Admin token.
+
+#### 🟠 PUT api/Users/update-title
+
+This enpoint used for title update. Only admin can do this. Please make sure to enter the Admin token.
+
+#### 🟠 PUT api/Users/update-IBAN
+
+This enpoint used for IBAN update. Only admin can do this. Please make sure to enter the Admin token.
 
 ### 📈 Report
 
