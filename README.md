@@ -67,7 +67,7 @@ Follow the steps below to run the project:
 
 ```bash
 git clone https://github.com/GizemG6/ExpenseTrackingSystem.git
-cd ExpenseTrackingSystem
+cd .\ExpenseTrackingSystem\
 ```
 
 ### 2️⃣ Configure the appsettings.json file:
