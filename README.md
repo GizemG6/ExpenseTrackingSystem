@@ -152,7 +152,7 @@ docker run -d --hostname my-rabbit --name rabbitmq -p 5672:5672 -p 15672:15672 r
 ➜ Through .NET CLI
 
 ```bash
-dotnet ef database update --startup-project Persistence/ExpenseTrackingSystem.API
+dotnet ef database update --project Infrastructure/ExpenseTrackingSystem.Persistence --startup-project Presentation/ExpenseTrackingSystem.API
 ```
 
 This command will create the database tables and add user and role information along with the seed data from the InitialMigration file.
