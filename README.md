@@ -180,8 +180,14 @@ This process will also create the database and initial data in the same way.
 ### 4️⃣ Run the application:
 
 ```bash
-dotnet run --project Presentation/ExpenseTrackingSystem.API
+dotnet run --project Presentation/ExpenseTrackingSystem.API --launch-profile https
 ```
+
+Then, open your browser and go to:
+
+👉 https://localhost:7136/swagger
+
+This will open the Swagger UI for the API.
 
 Alternatively, you can run it through Visual Studio or Rider.
 
