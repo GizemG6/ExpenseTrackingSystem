@@ -20,7 +20,7 @@ For approved requests, instant payments are processed via bank integration, and 
 
 ## 🛠️ Technologies Used
 
-| Teknoloji            | Açıklama                                  |
+| Technology           | Description                               |
 |----------------------|-------------------------------------------|
 | .NET 8               | Framework                                 |
 | EntityFramework Core | Code First data access                    |
